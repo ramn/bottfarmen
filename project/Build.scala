@@ -82,14 +82,14 @@ object Settings {
       case e: Exception => println(e)
     }
 
-    s.log.info("Extracting android libs")
-    val androidDest = file("android/src/main/libs")
-    val androidFilter = new ExactFilter("gdx-backend-android.jar") |
-    new ExactFilter("armeabi/libgdx.so") |
-    new ExactFilter("armeabi/libandroidgl20.so") |
-    new ExactFilter("armeabi-v7a/libgdx.so") |
-    new ExactFilter("armeabi-v7a/libandroidgl20.so")
-    IO.unzip(zipFile, androidDest, androidFilter)
+    //s.log.info("Extracting android libs")
+    //val androidDest = file("android/src/main/libs")
+    //val androidFilter = new ExactFilter("gdx-backend-android.jar") |
+    //new ExactFilter("armeabi/libgdx.so") |
+    //new ExactFilter("armeabi/libandroidgl20.so") |
+    //new ExactFilter("armeabi-v7a/libgdx.so") |
+    //new ExactFilter("armeabi-v7a/libandroidgl20.so")
+    //IO.unzip(zipFile, androidDest, androidFilter)
 
     // Destroy the file.
     zipFile.delete
