@@ -6,7 +6,8 @@ object Settings {
 
   lazy val common = Project.defaultSettings ++ Seq(
     version := "0.1",
-    scalaVersion := "2.10.1"
+    scalaVersion := "2.10.3",
+    scalacOptions ++= Seq("-deprecation")
    )
 
   lazy val desktop = Settings.common ++ Seq (
