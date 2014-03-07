@@ -3,10 +3,10 @@ import sbt._
 import Keys._
 
 object Settings {
-  lazy val common = Defaults.defaultSettings ++ Seq (
+
+  lazy val common = Project.defaultSettings ++ Seq(
     version := "0.1",
-    scalaVersion := "2.10.1",
-    updateLibgdxTask
+    scalaVersion := "2.10.1"
    )
 
   lazy val desktop = Settings.common ++ Seq (
@@ -23,15 +23,17 @@ object Settings {
       //proguardOption in Android := "-keep class com.badlogic.gdx.backends.android.** { *; }"
     //)
 
-  val updateLibgdx = TaskKey[Unit]("update-gdx", "Updates libgdx")
+  lazy val updateGdx = taskKey[Unit]("Downloads libgdx")
 
-  val updateLibgdxTask = updateLibgdx <<= streams map { (s: TaskStreams) =>
+  lazy val updateGdxSetting = updateGdx := {
     import Process._
     import java.io._
     import java.net.URL
     import java.nio.file.Paths
     import java.nio.file.Files
     
+    val s: TaskStreams = streams.value
+
     // Declare names
     val baseUrl = "http://libgdx.badlogicgames.com/nightlies"
     val gdxName = "libgdx-nightly-latest"
@@ -101,7 +103,7 @@ object LibgdxBuild extends Build {
   val common = Project (
     "common",
     file("common"),
-    settings = Settings.common
+    settings = Settings.common :+ Settings.updateGdxSetting
   )
 
   lazy val desktop = Project (
