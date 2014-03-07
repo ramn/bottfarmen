@@ -28,55 +28,55 @@ class GameScreen(val game: MyGame) extends Screen {
   val camera = new OrthographicCamera()
   camera.setToOrtho(false, game.width, game.height)
 
-	override def render(delta: Float) {
+  override def render(delta: Float) {
     // clear the screen with a dark blue color. The arguments to glClearColor
     // are the red, green blue and alpha component in the range [0,1] of the
     // color to be used to clear the screen.
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1)
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT)
+    Gdx.gl.glClearColor(0, 0, 0.2f, 1)
+    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT)
 
-		// tell the camera to update its matrices.
-		camera.update()
+    // tell the camera to update its matrices.
+    camera.update()
 
     // tell the SpriteBatch to render in the coordinate system specified by the
     // camera.
-		game.batch.setProjectionMatrix(camera.combined)
+    game.batch.setProjectionMatrix(camera.combined)
 
-		// draw between batch.begin() and batch.end()
-		game.batch.begin()
-		game.font.draw(game.batch, "Hello World!", 0, game.height)
-		//game.batch.draw(someSprite, x, y)
-		game.batch.end()
+    // draw between batch.begin() and batch.end()
+    game.batch.begin()
+    game.font.draw(game.batch, "Hello World!", 0, game.height)
+    //game.batch.draw(someSprite, x, y)
+    game.batch.end()
 
 
-		// process user input
-		if (Gdx.input.isTouched) {
-			val touchPos = new Vector3
-			touchPos.set(Gdx.input.getX, Gdx.input.getY, 0)
-			camera.unproject(touchPos)
+    // process user input
+    if (Gdx.input.isTouched) {
+      val touchPos = new Vector3
+      touchPos.set(Gdx.input.getX, Gdx.input.getY, 0)
+      camera.unproject(touchPos)
       // do something with touchPos
-		}
+    }
 
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+    if (Gdx.input.isKeyPressed(Keys.LEFT)) {
       // do something on left key press
     }
-	}
+  }
 
-	override def resize(width: Int, height: Int) {
-	}
+  override def resize(width: Int, height: Int) {
+  }
 
-	override def show {
-	}
+  override def show {
+  }
 
   override def hide() {
-	}
+  }
 
   override def pause() {
-	}
+  }
 
-	override def resume() {
-	}
+  override def resume() {
+  }
 
-	override def dispose() {
-	}
+  override def dispose() {
+  }
 }
