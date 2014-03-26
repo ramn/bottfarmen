@@ -1,4 +1,4 @@
-package se.ramn.screen
+package se.ramn.bottfarmen.screen
 
 import java.util.Iterator
 import collection.JavaConversions._
@@ -20,7 +20,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 
-import se.ramn.MyGame
+import se.ramn.bottfarmen.MyGame
 
 
 class GameScreen(val game: MyGame) extends Screen {

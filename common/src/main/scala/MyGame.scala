@@ -1,11 +1,11 @@
-package se.ramn
+package se.ramn.bottfarmen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 
-import se.ramn.screen.MainMenuScreen
+import se.ramn.bottfarmen.screen.MainMenuScreen
 
 
 class MyGame(val width: Int, val height: Int) extends Game {

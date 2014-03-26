@@ -1,4 +1,4 @@
-package se.ramn
+package se.ramn.bottfarmen
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication

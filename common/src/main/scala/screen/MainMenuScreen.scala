@@ -1,4 +1,4 @@
-package se.ramn.screen
+package se.ramn.bottfarmen.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Game
@@ -6,7 +6,7 @@ import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 
-import se.ramn.MyGame
+import se.ramn.bottfarmen.MyGame
 
 
 class MainMenuScreen(val game: MyGame) extends Screen {
