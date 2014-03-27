@@ -2,3 +2,5 @@ target
 /common/lib
 /desktop/lib
 /android/src/main/libs/
+.idea
+.idea_modules
