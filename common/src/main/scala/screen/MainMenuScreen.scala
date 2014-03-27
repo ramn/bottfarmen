@@ -35,7 +35,7 @@ class MainMenuScreen(val game: MyGame) extends Screen {
   def resize(width: Int, height: Int): Unit = {
   }
 
-  def pause(): Unit =  {}
+  def pause(): Unit = {}
   def resume(): Unit = {}
   def hide(): Unit = {}
   def show(): Unit = {}
