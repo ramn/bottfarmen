@@ -7,7 +7,12 @@ object Settings {
   lazy val common = Project.defaultSettings ++ Seq(
     version := "0.1",
     scalaVersion := "2.10.3",
-    scalacOptions ++= Seq("-deprecation"),
+    scalacOptions ++= Seq(
+      "-feature",
+      "-unchecked",
+      "-deprecation",
+      "-encoding", "utf8"
+    ),
     javacOptions ++= Seq("-Xlint:unchecked")
    )
 
