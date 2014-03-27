@@ -13,7 +13,10 @@ object Settings {
       "-deprecation",
       "-encoding", "utf8"
     ),
-    javacOptions ++= Seq("-Xlint:unchecked")
+    javacOptions ++= Seq("-Xlint:unchecked"),
+    libraryDependencies ++= Seq(
+      "org.scalatest" %% "scalatest" % "1.9.1"
+      )
    )
 
   lazy val desktop = Settings.common ++ Seq (
