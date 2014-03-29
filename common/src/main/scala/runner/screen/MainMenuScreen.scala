@@ -22,7 +22,7 @@ class MainMenuScreen(val game: BottfarmenGuiRunner) extends Screen {
     game.batch.setProjectionMatrix(camera.combined)
 
     game.batch.begin()
-    game.font.draw(game.batch, "Welcome to My Game! ", 100, 150)
+    game.font.draw(game.batch, "Welcome to Bottfarmen! ", 100, 150)
     game.font.draw(game.batch, "Click anywhere to begin", 100, 100)
     game.batch.end()
 
