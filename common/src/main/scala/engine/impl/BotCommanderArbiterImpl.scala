@@ -1,7 +1,6 @@
 package se.ramn.bottfarmen.engine.impl
 
 import collection.JavaConverters._
-import collection.immutable.Iterable
 
 import se.ramn.bottfarmen.api.BotCommander
 import se.ramn.bottfarmen.api.GameState
