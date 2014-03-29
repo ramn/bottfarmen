@@ -42,7 +42,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   private def update(delta: Float) = {
     camera.update() // update camera matrices
     processInput(delta)
-    turnsToPerform(delta) times {
+    turnsToPerform(delta).timesDo {
       commanderArbiter.doTurn
     }
   }
