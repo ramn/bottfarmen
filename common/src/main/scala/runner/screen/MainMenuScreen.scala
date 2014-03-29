@@ -1,4 +1,4 @@
-package se.ramn.bottfarmen.screen
+package se.ramn.bottfarmen.runner.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Game
@@ -6,10 +6,10 @@ import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 
-import se.ramn.bottfarmen.MyGame
+import se.ramn.bottfarmen.runner.BottfarmenGuiRunner
 
 
-class MainMenuScreen(val game: MyGame) extends Screen {
+class MainMenuScreen(val game: BottfarmenGuiRunner) extends Screen {
 
   val camera = new OrthographicCamera
   camera.setToOrtho(false, game.width, game.height)

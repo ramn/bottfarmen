@@ -1,14 +1,14 @@
-package se.ramn.bottfarmen
+package se.ramn.bottfarmen.runner
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 
-import se.ramn.bottfarmen.screen.MainMenuScreen
+import se.ramn.bottfarmen.runner.screen.MainMenuScreen
 
 
-class MyGame(val width: Int, val height: Int) extends Game {
+class BottfarmenGuiRunner(val width: Int, val height: Int) extends Game {
   private var myFont: BitmapFont = _
   private var myBatch: SpriteBatch = _
 

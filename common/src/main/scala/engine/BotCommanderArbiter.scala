@@ -1,8 +1,8 @@
-package se.ramn.bottfarmen
+package se.ramn.bottfarmen.engine
 
-import api.BotCommander
-import api.GameState
-import api.Bot
+import se.ramn.bottfarmen.api.BotCommander
+import se.ramn.bottfarmen.api.GameState
+import se.ramn.bottfarmen.api.Bot
 
 
 trait BotCommanderArbiter {

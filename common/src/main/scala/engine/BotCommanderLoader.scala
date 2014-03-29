@@ -1,6 +1,6 @@
-package se.ramn.bottfarmen
+package se.ramn.bottfarmen.engine
 
-import api.BotCommander
+import se.ramn.bottfarmen.api.BotCommander
 
 
 object BotCommanderLoader {

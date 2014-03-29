@@ -1,4 +1,4 @@
-package se.ramn.bottfarmen.screen
+package se.ramn.bottfarmen.runner.screen
 
 import java.util.Iterator
 import collection.JavaConversions._
@@ -20,13 +20,13 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 
-import se.ramn.bottfarmen.MyGame
-import se.ramn.bottfarmen.BotCommanderLoader
-import se.ramn.bottfarmen.BotCommanderArbiter
+import se.ramn.bottfarmen.runner.BottfarmenGuiRunner
+import se.ramn.bottfarmen.engine.BotCommanderLoader
+import se.ramn.bottfarmen.engine.BotCommanderArbiter
 import se.ramn.bottfarmen.util.Times
 
 
-class GameScreen(val game: MyGame) extends Screen with ScreenWithVoidImpl {
+class GameScreen(val game: BottfarmenGuiRunner) extends Screen with ScreenWithVoidImpl {
   private val commanderArbiter = buildCommanderArbiter
   private val camera = buildCamera
   private val turnIntervalSecs = 1f
