@@ -6,6 +6,7 @@ import se.ramn.bottfarmen.api.BotCommander
 import se.ramn.bottfarmen.api.GameState
 import se.ramn.bottfarmen.api.Bot
 import se.ramn.bottfarmen.engine.BotCommanderArbiter
+import se.ramn.bottfarmen.engine.RenderableBot
 
 
 class BotCommanderArbiterImpl(commanders: Set[BotCommander])
@@ -25,7 +26,14 @@ class BotCommanderArbiterImpl(commanders: Set[BotCommander])
   }
 
   override def bots = {
-    botsByCommanderId.values.toList.flatten
+    for {
+      (cmdrId, bots) <- botsByCommanderId
+      bot <- bots
+    } yield new RenderableBot {
+      val id = bot.id
+      val commanderId = cmdrId
+      val position = bot.position
+    }
   }
 
   protected def initialSetup() = {

@@ -100,7 +100,8 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
 
     commanderArbiter.bots foreach { bot =>
       val (x, y) = bot.position
-      game.font.draw(game.batch, bot.id.toString, x, y)
+      val text =  s"C${bot.commanderId}B${bot.id}"
+      game.font.draw(game.batch, text, x, y)
     }
     game.batch.end()
 

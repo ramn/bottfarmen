@@ -8,7 +8,7 @@ import impl.BotCommanderArbiterImpl
 
 trait BotCommanderArbiter {
   def doTurn: Unit
-  def bots: Iterable[Bot]
+  def bots: Iterable[RenderableBot]
 }
 
 
