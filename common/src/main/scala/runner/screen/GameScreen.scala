@@ -26,7 +26,7 @@ import se.ramn.bottfarmen.engine.BotCommanderArbiter
 import se.ramn.bottfarmen.util.Times
 
 
-class GameScreen(val game: BottfarmenGuiRunner) extends Screen with ScreenWithVoidImpl {
+class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   private val commanderArbiter = buildCommanderArbiter
   private val camera = buildCamera
   private val turnIntervalSecs = 1f
@@ -112,13 +112,4 @@ class GameScreen(val game: BottfarmenGuiRunner) extends Screen with ScreenWithVo
     camera.setToOrtho(false, game.width, game.height)
     camera
   }
-}
-
-trait ScreenWithVoidImpl extends Screen {
-  override def resize(width: Int, height: Int) = ()
-  override def show = ()
-  override def hide() = ()
-  override def pause() = ()
-  override def resume() = ()
-  override def dispose() = ()
 }

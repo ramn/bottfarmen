@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import se.ramn.bottfarmen.runner.BottfarmenGuiRunner
 
 
-class MainMenuScreen(val game: BottfarmenGuiRunner) extends Screen {
+class MainMenuScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
 
   val camera = new OrthographicCamera
   camera.setToOrtho(false, game.width, game.height)
@@ -31,13 +31,4 @@ class MainMenuScreen(val game: BottfarmenGuiRunner) extends Screen {
       dispose()
     }
   }
-
-  def resize(width: Int, height: Int): Unit = {
-  }
-
-  def pause(): Unit = {}
-  def resume(): Unit = {}
-  def hide(): Unit = {}
-  def show(): Unit = {}
-  def dispose(): Unit = {}
 }
