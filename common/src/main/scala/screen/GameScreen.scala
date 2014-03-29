@@ -21,34 +21,33 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 
 import se.ramn.bottfarmen.MyGame
+import se.ramn.bottfarmen.BotCommanderLoader
+import se.ramn.bottfarmen.BotCommanderArbiter
+import se.ramn.bottfarmen.util.Times
 
 
-class GameScreen(val game: MyGame) extends Screen {
-  // create the camera and the SpriteBatch
-  val camera = new OrthographicCamera()
-  camera.setToOrtho(false, game.width, game.height)
+class GameScreen(val game: MyGame) extends Screen with ScreenWithVoidImpl {
+  private val commanderArbiter = buildCommanderArbiter
+  private val camera = buildCamera
+  private val turnIntervalSecs = 1f
+
+  private var gameTimeSecs = 0f
 
   override def render(delta: Float) {
-    // clear the screen with a dark blue color. The arguments to glClearColor
-    // are the red, green blue and alpha component in the range [0,1] of the
-    // color to be used to clear the screen.
-    Gdx.gl.glClearColor(0, 0, 0.2f, 1)
-    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+    gameTimeSecs += delta // must be done first
+    update(delta)
+    draw(delta)
+  }
 
-    // tell the camera to update its matrices.
-    camera.update()
+  private def update(delta: Float) = {
+    camera.update() // update camera matrices
+    processInput(delta)
+    turnsToPerform(delta) times {
+      commanderArbiter.doTurn
+    }
+  }
 
-    // tell the SpriteBatch to render in the coordinate system specified by the
-    // camera.
-    game.batch.setProjectionMatrix(camera.combined)
-
-    // draw between batch.begin() and batch.end()
-    game.batch.begin()
-    game.font.draw(game.batch, "Hello World!", 0, game.height)
-    //game.batch.draw(someSprite, x, y)
-    game.batch.end()
-
-
+  private def processInput(delta: Float) = {
     // process user input
     if (Gdx.input.isTouched) {
       val touchPos = new Vector3
@@ -62,21 +61,64 @@ class GameScreen(val game: MyGame) extends Screen {
     }
   }
 
-  override def resize(width: Int, height: Int) {
+  private def turnsToPerform(delta: Float): Int = {
+    val previousGameTime = gameTimeSecs - delta
+    var turnsToPerform = 0
+    var deltaLeft = delta
+    while (deltaLeft > 0) {
+      val remaining = deltaLeft - turnIntervalSecs
+      if (remaining > 0) {
+        turnsToPerform += 1
+      } else {
+        val passedIntervalBoundaryByAFraction =
+          ((gameTimeSecs / turnIntervalSecs).floor >
+            (previousGameTime / turnIntervalSecs).floor)
+        if (passedIntervalBoundaryByAFraction) {
+          turnsToPerform += 1
+        }
+      }
+      deltaLeft = remaining
+    }
+    turnsToPerform
   }
 
-  override def show {
+  private def draw(delta: Float) = {
+    // clear the screen with a dark blue color. The arguments to glClearColor
+    // are the red, green blue and alpha component in the range [0,1] of the
+    // color to be used to clear the screen.
+    Gdx.gl.glClearColor(0, 0, 0.2f, 1)
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+
+    // tell the SpriteBatch to render in the coordinate system specified by the
+    // camera.
+    game.batch.setProjectionMatrix(camera.combined)
+
+    // draw between batch.begin() and batch.end()
+    game.batch.begin()
+    game.font.draw(game.batch, "Hello World!", 0, game.height)
+    //game.batch.draw(someSprite, x, y)
+    game.batch.end()
+
   }
 
-  override def hide() {
+  private def buildCommanderArbiter = {
+    val commanders = BotCommanderLoader.loadFromEnv
+    BotCommanderArbiter(commanders)
   }
 
-  override def pause() {
+  private def buildCamera = {
+    // create the camera and the SpriteBatch
+    val camera = new OrthographicCamera()
+    camera.setToOrtho(false, game.width, game.height)
+    camera
   }
+}
 
-  override def resume() {
-  }
-
-  override def dispose() {
-  }
+trait ScreenWithVoidImpl extends Screen {
+  override def resize(width: Int, height: Int) = ()
+  override def show = ()
+  override def hide() = ()
+  override def pause() = ()
+  override def resume() = ()
+  override def dispose() = ()
 }

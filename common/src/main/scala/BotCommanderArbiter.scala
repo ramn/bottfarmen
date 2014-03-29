@@ -5,8 +5,15 @@ import api.GameState
 import api.Bot
 
 
-class BotCommanderArbiter(commanders: Set[BotCommander]) {
-  def update: Unit = {
+trait BotCommanderArbiter {
+  def doTurn: Unit
+}
+
+
+class BotCommanderArbiterImpl(commanders: Set[BotCommander])
+  extends BotCommanderArbiter {
+
+  def doTurn: Unit = {
     val commandsByCommander = commanders.map { commander =>
       val commands = commander.update(gameStateFor(commander))
       (commander -> commands)
@@ -19,5 +26,12 @@ class BotCommanderArbiter(commanders: Set[BotCommander]) {
       def turn = 0
       def bots = java.util.Collections.emptyList[Bot]
     }
+  }
+}
+
+
+object BotCommanderArbiter {
+  def apply(commanders: Set[BotCommander]): BotCommanderArbiter = {
+    new BotCommanderArbiterImpl(commanders)
   }
 }
