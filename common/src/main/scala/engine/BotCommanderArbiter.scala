@@ -1,5 +1,7 @@
 package se.ramn.bottfarmen.engine
 
+import collection.JavaConverters._
+import collection.immutable.Iterable
 import se.ramn.bottfarmen.api.BotCommander
 import se.ramn.bottfarmen.api.GameState
 import se.ramn.bottfarmen.api.Bot
@@ -7,13 +9,19 @@ import se.ramn.bottfarmen.api.Bot
 
 trait BotCommanderArbiter {
   def doTurn: Unit
+  def bots: Iterable[Bot]
 }
 
 
 class BotCommanderArbiterImpl(commanders: Set[BotCommander])
   extends BotCommanderArbiter {
 
-  def doTurn: Unit = {
+  var botsByCommanderId: Map[Int, Set[Bot]] = Map()
+  val commanderToId = commanders.zipWithIndex.toMap
+
+  initialSetup()
+
+  override def doTurn: Unit = {
     val commandsByCommander = commanders.map { commander =>
       val commands = commander.update(gameStateFor(commander))
       (commander -> commands)
@@ -21,10 +29,29 @@ class BotCommanderArbiterImpl(commanders: Set[BotCommander])
     // evaluate commands ...
   }
 
-  def gameStateFor(commander: BotCommander): GameState = {
+  override def bots = {
+    botsByCommanderId.values.toList.flatten
+  }
+
+  protected def initialSetup() = {
+    commanders foreach { commander =>
+      val bot = new Bot {
+        val id = 1
+        def position = (50, 50)
+        def hitpoints = 100
+      }
+      setBotsFor(commanderToId(commander), Set(bot))
+    }
+  }
+
+  protected def setBotsFor(commanderId: Int, bots: Set[Bot]) = {
+    botsByCommanderId = botsByCommanderId.updated(commanderId, bots)
+  }
+
+  protected def gameStateFor(commander: BotCommander): GameState = {
     new GameState {
       def turn = 0
-      def bots = java.util.Collections.emptyList[Bot]
+      def bots = botsByCommanderId(commanderToId(commander)).toList.asJava
     }
   }
 }
