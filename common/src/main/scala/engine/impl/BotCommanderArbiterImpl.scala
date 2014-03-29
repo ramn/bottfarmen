@@ -22,7 +22,7 @@ class BotCommanderArbiterImpl(commanders: Set[BotCommander])
       val commands = commander.update(gameStateFor(commander))
       (commander -> commands)
     }
-    // evaluate commands ...
+    // TODO: evaluate commands ...
   }
 
   override def bots = {
@@ -37,6 +37,7 @@ class BotCommanderArbiterImpl(commanders: Set[BotCommander])
   }
 
   protected def initialSetup() = {
+    // TODO: setup bots at correct positions
     commanders foreach { commander =>
       val bot = new Bot {
         val id = 1
@@ -52,6 +53,7 @@ class BotCommanderArbiterImpl(commanders: Set[BotCommander])
   }
 
   protected def gameStateFor(commander: BotCommander): GameState = {
+    // TODO: build proper game state
     new GameState {
       def turn = 0
       def bots = botsByCommanderId(commanderToId(commander)).toList.asJava
