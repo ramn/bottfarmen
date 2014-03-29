@@ -8,7 +8,7 @@ import se.ramn.bottfarmen.api.Command
 
 
 class DummyBot(initialUnderlying: Bot) extends MyBot {
-  protected var underlying = initialUnderlying
+  protected override var underlying = initialUnderlying
 }
 
 class DummyBotCommander extends BotCommander {
