@@ -107,7 +107,6 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   }
 
   private def buildCamera = {
-    // create the camera and the SpriteBatch
     val camera = new OrthographicCamera()
     camera.setToOrtho(false, game.width, game.height)
     camera
