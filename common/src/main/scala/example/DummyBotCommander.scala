@@ -11,6 +11,7 @@ class DummyBot(initialUnderlying: Bot) extends MyBot {
   protected override var underlying = initialUnderlying
 }
 
+
 class DummyBotCommander extends BotCommander {
   val name = "Dummy bot commander"
   protected var bots = Set.empty[MyBot]
