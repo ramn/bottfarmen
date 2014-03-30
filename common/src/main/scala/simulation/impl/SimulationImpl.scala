@@ -39,12 +39,26 @@ class SimulationImpl(
         case Move(botId, steps) if !steps.isEmpty =>
           val botMaybe = botsByCommander(commander).find(_.id == botId)
           botMaybe foreach { bot =>
-            val step = steps.head
-            step match {
-              case 'n' => bot.row = bot.row - 1
-              case 's' => bot.row = bot.row + 1
-              case 'w' => bot.col = bot.col - 1
-              case 'e' => bot.col = bot.col + 1
+            val step = steps.filter("nsew".toSet).head
+            val (targetRow, targetCol) = step match {
+              case 'n' => (bot.row - 1) -> bot.col
+              case 's' => (bot.row + 1) -> bot.col
+              case 'w' => bot.row -> (bot.col - 1)
+              case 'e' => bot.row -> (bot.col + 1)
+            }
+            val isWithinMap = (scenario.map.rowCount >= targetRow
+              && targetRow >= 0
+              && scenario.map.colCount >= targetCol
+              && targetCol >= 0)
+            if (isWithinMap) {
+              val targetTile = scenario.map.rows(targetRow)(targetCol)
+              targetTile match {
+                case '~' =>
+                  setBotsFor(commander, botsByCommander(commander) - bot)
+                case _ =>
+                  bot.row = targetRow
+                  bot.col = targetCol
+              }
             }
           }
       }
