@@ -23,10 +23,12 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import se.ramn.bottfarmen.runner.BottfarmenGuiRunner
 import se.ramn.bottfarmen.engine.BotCommanderLoader
 import se.ramn.bottfarmen.engine.BotCommanderArbiter
+import se.ramn.bottfarmen.engine.Scenario
 import se.ramn.bottfarmen.util.Times
 
 
 class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
+  val tilesize = 32
   private val commanderArbiter = buildCommanderArbiter
   private val camera = buildCamera
   private val turnIntervalSecs = 1f
@@ -108,7 +110,16 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
 
   private def buildCommanderArbiter = {
     val commanders = BotCommanderLoader.loadFromEnv
-    BotCommanderArbiter(commanders)
+    val scenario = new Scenario {
+      val mapRows = game.height / tilesize
+      val mapCols = game.width / tilesize
+      val startingPositions = List(
+        (50, 50),
+        (100, 100),
+        (150, 150),
+        (200, 200))
+    }
+    BotCommanderArbiter(commanders, scenario)
   }
 
   private def buildCamera = {

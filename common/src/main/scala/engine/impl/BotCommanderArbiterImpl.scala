@@ -7,10 +7,13 @@ import se.ramn.bottfarmen.api.GameState
 import se.ramn.bottfarmen.api.Bot
 import se.ramn.bottfarmen.engine.BotCommanderArbiter
 import se.ramn.bottfarmen.engine.RenderableBot
+import se.ramn.bottfarmen.engine.Scenario
 
 
-class BotCommanderArbiterImpl(commanders: Set[BotCommander])
-  extends BotCommanderArbiter {
+class BotCommanderArbiterImpl(
+  commanders: Set[BotCommander],
+  scenario: Scenario
+) extends BotCommanderArbiter {
 
   var botsByCommanderId: Map[Int, Set[Bot]] = Map()
   val commanderToId = commanders.zipWithIndex.toMap
@@ -37,14 +40,8 @@ class BotCommanderArbiterImpl(commanders: Set[BotCommander])
   }
 
   protected def initialSetup() = {
-    // TODO: setup bots at correct positions
-    val startingPositionsList = List(
-      (50, 50),
-      (100, 100),
-      (150, 150),
-      (200, 200))
-    require(commanders.size <= startingPositionsList.length)
-    val startingPositions = startingPositionsList.iterator
+    require(commanders.size <= scenario.startingPositions.length)
+    val startingPositions = scenario.startingPositions.iterator
     commanders foreach { commander =>
       val bot = new Bot {
         val id = 1

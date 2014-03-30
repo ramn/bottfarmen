@@ -13,7 +13,10 @@ trait BotCommanderArbiter {
 
 
 object BotCommanderArbiter {
-  def apply(commanders: Set[BotCommander]): BotCommanderArbiter = {
-    new BotCommanderArbiterImpl(commanders)
+  def apply(
+    commanders: Set[BotCommander],
+    scenario: Scenario
+  ): BotCommanderArbiter = {
+    new BotCommanderArbiterImpl(commanders, scenario)
   }
 }
