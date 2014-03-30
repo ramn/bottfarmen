@@ -10,5 +10,6 @@ object DesktopStarter extends App {
     cfg.title = "BottfarmenGuiRunner"
     cfg.width = 1280
     cfg.height = 800
+    cfg.vSyncEnabled = true
     new LwjglApplication(new BottfarmenGuiRunner(width=cfg.width, height=cfg.height), cfg)
 }
