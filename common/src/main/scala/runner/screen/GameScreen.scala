@@ -187,8 +187,8 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   private def buildCommanderArbiter = {
     val commanders = BotCommanderLoader.loadFromEnv
     val scenario = new Scenario {
-      val mapRows = game.height / tilesize
-      val mapCols = game.width / tilesize
+      val mapRows = map.rowCount
+      val mapCols = map.colCount
       val startingPositions = List(
         (50, 50),
         (100, 100),
