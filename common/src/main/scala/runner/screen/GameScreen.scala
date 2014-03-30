@@ -113,13 +113,19 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     game.batch.setProjectionMatrix(camera.combined)
 
     // draw between batch.begin() and batch.end()
-    game.batch.begin()
-    drawTerrain()
-    drawBots()
-    game.batch.end()
+    inBatch {
+      drawTerrain()
+      drawBots()
+    }
     drawPropertiesHudFrame()
+    inBatch {
+      drawBotProperties()
+    }
+  }
+
+  private def inBatch(thunk: => Unit) = {
     game.batch.begin()
-    drawBotProperties()
+    thunk
     game.batch.end()
   }
 
