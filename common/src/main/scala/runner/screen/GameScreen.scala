@@ -21,18 +21,21 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 
 import se.ramn.bottfarmen.runner.BottfarmenGuiRunner
-import se.ramn.bottfarmen.engine.BotCommanderLoader
-import se.ramn.bottfarmen.engine.BotCommanderArbiter
-import se.ramn.bottfarmen.engine.Scenario
+import se.ramn.bottfarmen.engine.{TileMap, BotCommanderLoader, BotCommanderArbiter, Scenario}
 import se.ramn.bottfarmen.util.Times
+import com.badlogic.gdx.graphics.g2d.{TextureRegion, Sprite}
 
 
 class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
-  val tilesize = 32
+  val tilesize = 16
   private val commanderArbiter = buildCommanderArbiter
   private val camera = buildCamera
   private val turnIntervalSecs = 1f
-
+  private val terrainSprites = new Texture(Gdx.files.internal("assets/data/terrainsprites.png"))
+  private val sprites = Map(
+    '.' -> new TextureRegion(terrainSprites, 0, 0, tilesize, tilesize),
+    '~' -> new TextureRegion(terrainSprites, 1 * tilesize, 0, tilesize, tilesize)
+  )
   private var gameTimeSecs = 0f
 
   override def render(delta: Float) {
@@ -97,6 +100,13 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
 
     // draw between batch.begin() and batch.end()
     game.batch.begin()
+    val map = TileMap.loadFromFile("assets/data/testmap.txt")
+
+    for {
+      (row, rowIx) <- map.rows.zipWithIndex
+      (cell, colIx) <- row.zipWithIndex
+      (x, y) = tileCoord(rowIx, colIx)
+    } game.batch.draw(sprites(cell), x, y)
     game.font.draw(game.batch, "Hello World!", 0, game.height)
     //game.batch.draw(someSprite, x, y)
 
@@ -107,6 +117,8 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     }
     game.batch.end()
   }
+
+  private def tileCoord(row: Int, col: Int): (Int, Int) = (col * tilesize, game.height-(row * tilesize)-tilesize)
 
   private def buildCommanderArbiter = {
     val commanders = BotCommanderLoader.loadFromEnv
