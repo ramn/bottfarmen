@@ -15,7 +15,7 @@ object TileMap {
   type Tile = Char
 
   def loadFromFile(path: String): TileMap = {
-    parse(io.Source.fromFile(path).getLines.mkString)
+    parse(io.Source.fromFile(path).mkString)
   }
 
   def parse(rawMap: String): TileMap = {
