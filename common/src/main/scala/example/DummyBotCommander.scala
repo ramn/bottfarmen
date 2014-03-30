@@ -18,8 +18,7 @@ class DummyBotCommander extends BotCommander {
 
   def update(gameState: GameState) = {
     updateMyBotsFromGameState(gameState)
-    val commands = java.util.Collections.emptyList[Command]
-    commands
+    List.empty[Command].asJava
   }
 
   def updateMyBotsFromGameState(gameState: GameState) = {
