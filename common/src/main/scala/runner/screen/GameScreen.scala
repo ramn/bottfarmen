@@ -30,10 +30,15 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   private val commanderArbiter = buildCommanderArbiter
   private val camera = buildCamera
   private val turnIntervalSecs = 1f
-  private val terrainSprites = new Texture(Gdx.files.internal("assets/data/terrainsprites.png"))
-  private val sprites = Map(
-    '.' -> new TextureRegion(terrainSprites, 0, 0, tilesize, tilesize),
-    '~' -> new TextureRegion(terrainSprites, 1 * tilesize, 0, tilesize, tilesize)
+  private val terrainTexture = new Texture(Gdx.files.internal("assets/data/terrainsprites.png"))
+  private val objectTexture = new Texture(Gdx.files.internal("assets/data/objectsprites.png"))
+  private val terrainSprites = Map(
+    '.' -> new TextureRegion(terrainTexture, 0, 0, tilesize, tilesize),
+    '~' -> new TextureRegion(terrainTexture, 1 * tilesize, 0, tilesize, tilesize)
+  )
+  private val objectSprites = Map(
+    "p1" -> new TextureRegion(objectTexture, 0, 0, tilesize, tilesize),
+    "p2" -> new TextureRegion(objectTexture, 1 * tilesize, 0, tilesize, tilesize)
   )
   private val map = TileMap.loadFromFile("assets/data/testmap.txt")
   private var gameTimeSecs = 0f
@@ -115,14 +120,14 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
       (row, rowIx) <- map.rows.zipWithIndex
       (cell, colIx) <- row.zipWithIndex
       (x, y) = tileCoord(rowIx, colIx)
-    } game.batch.draw(sprites(cell), x, y)
+    } game.batch.draw(terrainSprites(cell), x, y)
   }
 
   private def drawBots() = {
     commanderArbiter.bots foreach { bot =>
       val (x, y) = bot.position
-      val text =  s"C${bot.commanderId}B${bot.id}"
-      game.font.draw(game.batch, text, x, y)
+      val commanderString =  s"p${bot.commanderId+1}"
+      game.batch.draw(objectSprites(commanderString), x, y)
     }
   }
 
