@@ -190,7 +190,8 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     }
   }
 
-  private def tileCoord(row: Int, col: Int): (Int, Int) = (col * tilesize, game.height-(row * tilesize)-tilesize)
+  private def tileCoord(row: Int, col: Int): (Int, Int) =
+    (col * tilesize, game.height-(row * tilesize)-tilesize)
 
   private def buildCommanderArbiter = {
     val commanders = BotCommanderLoader.loadFromEnv
