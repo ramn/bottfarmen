@@ -1,6 +1,5 @@
 package se.ramn.bottfarmen.runner.screen
 
-import java.util.Iterator
 import collection.JavaConversions._
 
 import com.badlogic.gdx.Gdx
@@ -99,6 +98,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     game.batch.begin()
     drawTerrain()
     drawBots()
+    drawBotProperties()
     game.batch.end()
   }
 
@@ -121,6 +121,20 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   private def drawBots() = {
     commanderArbiter.bots foreach { bot =>
       val (x, y) = bot.position
+      val text =  s"C${bot.commanderId}B${bot.id}"
+      game.font.draw(game.batch, text, x, y)
+    }
+  }
+
+  private def drawBotProperties() = {
+    val propertiesOffset = game.height - 40
+    val propertiesBoxHeight = 100
+    val propsOffsets = Iterator.iterate(propertiesOffset) { x =>
+      x - propertiesBoxHeight
+    }
+    commanderArbiter.bots foreach { bot =>
+      val offset = propsOffsets.next
+      val (x, y) = (1000, offset)
       val text =  s"C${bot.commanderId}B${bot.id}"
       game.font.draw(game.batch, text, x, y)
     }
