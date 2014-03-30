@@ -23,8 +23,8 @@ import com.badlogic.gdx.graphics.g2d.{TextureRegion, Sprite}
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 
 import se.ramn.bottfarmen.runner.BottfarmenGuiRunner
-import se.ramn.bottfarmen.engine.{TileMap, BotCommanderLoader, Simulation}
-import se.ramn.bottfarmen.engine.Scenario
+import se.ramn.bottfarmen.simulation.{TileMap, BotCommanderLoader, Simulation}
+import se.ramn.bottfarmen.simulation.Scenario
 import se.ramn.bottfarmen.util.Times
 
 

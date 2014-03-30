@@ -1,6 +1,6 @@
 import org.scalatest.FunSuite
 
-import se.ramn.bottfarmen.engine.TileMap
+import se.ramn.bottfarmen.simulation.TileMap
 
 
 class TileMapTest extends FunSuite {

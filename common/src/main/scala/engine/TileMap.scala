@@ -1,4 +1,4 @@
-package se.ramn.bottfarmen.engine
+package se.ramn.bottfarmen.simulation
 
 import collection.immutable.IndexedSeq
 import TileMap.Tile

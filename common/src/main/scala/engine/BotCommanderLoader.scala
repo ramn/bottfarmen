@@ -1,4 +1,4 @@
-package se.ramn.bottfarmen.engine
+package se.ramn.bottfarmen.simulation
 
 import se.ramn.bottfarmen.api.BotCommander
 

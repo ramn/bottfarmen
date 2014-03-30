@@ -1,14 +1,14 @@
-package se.ramn.bottfarmen.engine.impl
+package se.ramn.bottfarmen.simulation.impl
 
 import collection.JavaConverters._
 
 import se.ramn.bottfarmen.api.BotCommander
 import se.ramn.bottfarmen.api.GameState
 import se.ramn.bottfarmen.api.Bot
-import se.ramn.bottfarmen.engine.Simulation
-import se.ramn.bottfarmen.engine.BotCommanderView
-import se.ramn.bottfarmen.engine.BotView
-import se.ramn.bottfarmen.engine.Scenario
+import se.ramn.bottfarmen.simulation.Simulation
+import se.ramn.bottfarmen.simulation.BotCommanderView
+import se.ramn.bottfarmen.simulation.BotView
+import se.ramn.bottfarmen.simulation.Scenario
 
 
 class SimulationImpl(
