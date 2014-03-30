@@ -104,7 +104,6 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
       game.font.draw(game.batch, text, x, y)
     }
     game.batch.end()
-
   }
 
   private def buildCommanderArbiter = {
