@@ -6,7 +6,7 @@ import se.ramn.bottfarmen.api.BotCommander
 import se.ramn.bottfarmen.api.GameState
 import se.ramn.bottfarmen.api.Bot
 import se.ramn.bottfarmen.engine.BotCommanderArbiter
-import se.ramn.bottfarmen.engine.RenderableBot
+import se.ramn.bottfarmen.engine.BotView
 import se.ramn.bottfarmen.engine.Scenario
 
 
@@ -32,7 +32,7 @@ class BotCommanderArbiterImpl(
     for {
       (cmdrId, bots) <- botsByCommanderId
       bot <- bots
-    } yield new RenderableBot {
+    } yield new BotView {
       val id = bot.id
       val commanderId = cmdrId
       val position = bot.position

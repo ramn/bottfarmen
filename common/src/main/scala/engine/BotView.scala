@@ -1,7 +1,7 @@
 package se.ramn.bottfarmen.engine
 
 
-trait RenderableBot {
+trait BotView {
   val id: Int
   val commanderId: Int
   def position: (Int, Int)
