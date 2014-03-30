@@ -15,15 +15,32 @@ class TileMapTest extends FunSuite {
       |cols 129
       |m ...........
       |m ...........
-      |m .........%.
-      |m ........%..
-      |m %%.....%%..""".trim.stripMargin
+      |m .........~.
+      |m ........~..
+      |m ~~.....~~..""".trim.stripMargin
     val result = TileMap.parse(testMap)
     assert(result.rowCount === 102)
     assert(result.colCount === 129)
     assert(result.rows.length === 5)
     assert(result.rows(0).forall(_ == '.'))
     assert(result.rows(0).length === 11)
-    assert(result.rows(2)(9) === '%')
+    assert(result.rows(2)(9) === '~')
+  }
+
+  test("minimum viable map") {
+    val testMap = """
+      |rows 2
+      |cols 3
+      |m ...
+      |m ~~.""".trim.stripMargin
+    val result = TileMap.parse(testMap)
+    assert(result.rowCount === 2)
+    assert(result.colCount === 3)
+    assert(result.rows.length === 2)
+    assert(result.rows(0).forall(_ == '.'))
+    assert(result.rows(0).length === 3)
+    assert(result.rows(1)(0) === '~')
+    assert(result.rows(1)(1) === '~')
+    assert(result.rows(1)(2) === '.')
   }
 }

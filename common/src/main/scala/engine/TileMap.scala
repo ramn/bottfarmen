@@ -18,6 +18,12 @@ object TileMap {
     parse(io.Source.fromFile(path).mkString)
   }
 
+  /*
+   * The map file uses the same format as Ants AI Challenge.
+   * Comment lines start with #
+   * Then there are header rows, key/value pairs.
+   * Then the actual map rows, prefixed with "m "
+   */
   def parse(rawMap: String): TileMap = {
     def isComment(row: String) = row.trim.startsWith("#")
     def isMap(row: String) = row.trim.startsWith("m ")
