@@ -23,7 +23,8 @@ import com.badlogic.gdx.graphics.g2d.{TextureRegion, Sprite}
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 
 import se.ramn.bottfarmen.runner.BottfarmenGuiRunner
-import se.ramn.bottfarmen.engine.{TileMap, BotCommanderLoader, Simulation, Scenario}
+import se.ramn.bottfarmen.engine.{TileMap, BotCommanderLoader, Simulation}
+import se.ramn.bottfarmen.engine.Scenario
 import se.ramn.bottfarmen.util.Times
 
 
@@ -33,8 +34,10 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   private lazy val camera = buildCamera
   private val shapeRenderer = new ShapeRenderer
   private val turnIntervalSecs = 1f
-  private val terrainTexture = new Texture(Gdx.files.internal("assets/data/terrainsprites.png"))
-  private val objectTexture = new Texture(Gdx.files.internal("assets/data/objectsprites.png"))
+  private lazy val terrainTexture =
+    new Texture(Gdx.files.internal("assets/data/terrainsprites.png"))
+  private lazy val objectTexture =
+    new Texture(Gdx.files.internal("assets/data/objectsprites.png"))
   private lazy val terrainSprites = buildTerrainSprites
   private lazy val objectSprites = buildObjectSprites
   private lazy val map = TileMap.loadFromFile("assets/data/testmap.txt")
