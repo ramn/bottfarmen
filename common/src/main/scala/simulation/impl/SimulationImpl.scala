@@ -14,11 +14,12 @@ import se.ramn.bottfarmen.simulation.Scenario
 class SimulationImpl(
   commanders: Set[BotCommander],
   scenario: Scenario
-) extends Simulation {
+) extends Simulation with ViewableSimulation {
 
   val commanderToId = commanders.zipWithIndex.toMap
+  lazy val view = new SimulationView(this)
 
-  var botsByCommanderId: Map[Int, Set[Bot]] = Map()
+  var botsByCommander: Map[BotCommander, Set[Bot]] = Map()
 
   initialSetup()
 
@@ -30,30 +31,9 @@ class SimulationImpl(
     // TODO: evaluate commands ...
   }
 
-  override def botCommanders = commanders map commanderView
+  override def botCommanders = view.botCommanders
 
-  override def bots = commanders flatMap botViewsForCommander
-
-  def commanderView(commander: BotCommander): BotCommanderView = {
-    new BotCommanderView {
-      val id = commanderToId(commander)
-      val name = commander.name
-      val bots = botViewsForCommander(commander)
-    }
-  }
-
-  def botViewsForCommander(commander: BotCommander): Iterable[BotView] = {
-    val cmdrId = commanderToId(commander)
-    botsByCommanderId(cmdrId) map { bot =>
-      new BotView {
-        val id = bot.id
-        val commanderId = cmdrId
-        val row = bot.row
-        val col = bot.col
-        val hitpoints = bot.hitpoints
-      }
-    }
-  }
+  override def bots = view.bots
 
   protected def initialSetup() = {
     require(commanders.size <= scenario.map.startingPositions.length)
@@ -66,19 +46,57 @@ class SimulationImpl(
         val col = pos.col
         def hitpoints = 100
       }
-      setBotsFor(commanderToId(commander), Set(bot))
+      setBotsFor(commander, Set(bot))
     }
   }
 
-  protected def setBotsFor(commanderId: Int, bots: Set[Bot]) = {
-    botsByCommanderId = botsByCommanderId.updated(commanderId, bots)
+  protected def setBotsFor(commander: BotCommander, bots: Set[Bot]) = {
+    botsByCommander = botsByCommander.updated(commander, bots)
   }
 
   protected def gameStateFor(commander: BotCommander): GameState = {
     // TODO: build proper game state
     new GameState {
       def turn = 0
-      def bots = botsByCommanderId(commanderToId(commander)).toList.asJava
+      def bots = botsByCommander(commander).toList.asJava
+    }
+  }
+}
+
+
+trait ViewableSimulation {
+  val commanderToId: Map[BotCommander, Int]
+  def botsByCommander: Map[BotCommander, Set[Bot]]
+}
+
+
+class SimulationView(viewableSimulation: ViewableSimulation) {
+  protected val commanders = commanderToId.keySet
+  protected val commanderToId = viewableSimulation.commanderToId
+
+  def botCommanders = commanders map commanderView
+
+  def bots = commanders flatMap botViewsForCommander
+
+  protected def botsByCommander = viewableSimulation.botsByCommander
+
+  protected def commanderView(commander: BotCommander): BotCommanderView = {
+    new BotCommanderView {
+      val id = commanderToId(commander)
+      val name = commander.name
+      val bots = botViewsForCommander(commander)
+    }
+  }
+
+  protected def botViewsForCommander(commander: BotCommander): Iterable[BotView] = {
+    botsByCommander(commander) map { bot =>
+      new BotView {
+        val id = bot.id
+        val commanderId = commanderToId(commander)
+        val row = bot.row
+        val col = bot.col
+        val hitpoints = bot.hitpoints
+      }
     }
   }
 }
