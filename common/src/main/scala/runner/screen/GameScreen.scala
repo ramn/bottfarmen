@@ -89,11 +89,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   }
 
   private def draw(delta: Float) = {
-    // clear the screen with a dark blue color. The arguments to glClearColor
-    // are the red, green blue and alpha component in the range [0,1] of the
-    // color to be used to clear the screen.
-    Gdx.gl.glClearColor(0, 0, 0.2f, 1)
-    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+    clearScreen()
 
     // tell the SpriteBatch to render in the coordinate system specified by the
     // camera.
@@ -104,6 +100,14 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     drawTerrain()
     drawBots()
     game.batch.end()
+  }
+
+  private def clearScreen() = {
+    // clear the screen with a dark blue color. The arguments to glClearColor
+    // are the red, green blue and alpha component in the range [0,1] of the
+    // color to be used to clear the screen.
+    Gdx.gl.glClearColor(0, 0, 0.2f, 1)
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
   }
 
   private def drawTerrain() = {
