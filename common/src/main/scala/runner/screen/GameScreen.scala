@@ -107,8 +107,6 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
       (cell, colIx) <- row.zipWithIndex
       (x, y) = tileCoord(rowIx, colIx)
     } game.batch.draw(sprites(cell), x, y)
-    game.font.draw(game.batch, "Hello World!", 0, game.height)
-    //game.batch.draw(someSprite, x, y)
 
     commanderArbiter.bots foreach { bot =>
       val (x, y) = bot.position
