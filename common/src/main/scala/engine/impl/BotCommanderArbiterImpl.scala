@@ -38,10 +38,17 @@ class BotCommanderArbiterImpl(commanders: Set[BotCommander])
 
   protected def initialSetup() = {
     // TODO: setup bots at correct positions
+    val startingPositionsList = List(
+      (50, 50),
+      (100, 100),
+      (150, 150),
+      (200, 200))
+    require(commanders.size <= startingPositionsList.length)
+    val startingPositions = startingPositionsList.iterator
     commanders foreach { commander =>
       val bot = new Bot {
         val id = 1
-        def position = (50, 50)
+        val position = startingPositions.next
         def hitpoints = 100
       }
       setBotsFor(commanderToId(commander), Set(bot))
