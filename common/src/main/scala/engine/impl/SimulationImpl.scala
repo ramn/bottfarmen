@@ -5,16 +5,16 @@ import collection.JavaConverters._
 import se.ramn.bottfarmen.api.BotCommander
 import se.ramn.bottfarmen.api.GameState
 import se.ramn.bottfarmen.api.Bot
-import se.ramn.bottfarmen.engine.BotCommanderArbiter
+import se.ramn.bottfarmen.engine.Simulation
 import se.ramn.bottfarmen.engine.BotCommanderView
 import se.ramn.bottfarmen.engine.BotView
 import se.ramn.bottfarmen.engine.Scenario
 
 
-class BotCommanderArbiterImpl(
+class SimulationImpl(
   commanders: Set[BotCommander],
   scenario: Scenario
-) extends BotCommanderArbiter {
+) extends Simulation {
 
   var botsByCommanderId: Map[Int, Set[Bot]] = Map()
   val commanderToId = commanders.zipWithIndex.toMap

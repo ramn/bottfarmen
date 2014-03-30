@@ -23,13 +23,13 @@ import com.badlogic.gdx.graphics.g2d.{TextureRegion, Sprite}
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 
 import se.ramn.bottfarmen.runner.BottfarmenGuiRunner
-import se.ramn.bottfarmen.engine.{TileMap, BotCommanderLoader, BotCommanderArbiter, Scenario}
+import se.ramn.bottfarmen.engine.{TileMap, BotCommanderLoader, Simulation, Scenario}
 import se.ramn.bottfarmen.util.Times
 
 
 class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   val tilesize = 16
-  private lazy val commanderArbiter = buildCommanderArbiter
+  private lazy val simulation = buildSimulation
   private lazy val camera = buildCamera
   private val shapeRenderer = new ShapeRenderer
   private val turnIntervalSecs = 1f
@@ -66,7 +66,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     camera.update() // update camera matrices
     processInput(delta)
     turnsToPerform(delta).timesDo {
-      commanderArbiter.doTurn
+      simulation.doTurn
     }
   }
 
@@ -146,7 +146,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   }
 
   private def drawBots() = {
-    commanderArbiter.bots foreach { bot =>
+    simulation.bots foreach { bot =>
       val (x, y) = bot.position
       val commanderString =  s"p${bot.commanderId+1}"
       game.batch.draw(objectSprites(commanderString), x, y)
@@ -179,7 +179,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
       game.font.draw(game.batch, text, x, y)
     }
     game.batch.setColor(Color.WHITE)
-    commanderArbiter.botCommanders foreach { commander =>
+    simulation.botCommanders foreach { commander =>
       drawtextln(commander.name)
       drawtextln(s"Commander id: ${commander.id}")
       commander.bots foreach { bot =>
@@ -193,7 +193,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   private def tileCoord(row: Int, col: Int): (Int, Int) =
     (col * tilesize, game.height-(row * tilesize)-tilesize)
 
-  private def buildCommanderArbiter = {
+  private def buildSimulation = {
     val commanders = BotCommanderLoader.loadFromEnv
     val scenario = new Scenario {
       val mapRows = map.rowCount
@@ -204,7 +204,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
         (150, 150),
         (200, 200))
     }
-    BotCommanderArbiter(commanders, scenario)
+    Simulation(commanders, scenario)
   }
 
   private def buildCamera = {
