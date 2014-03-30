@@ -48,19 +48,22 @@ class SimulationImpl(
       new BotView {
         val id = bot.id
         val commanderId = cmdrId
-        val position = bot.position
+        val row = bot.row
+        val col = bot.col
         val hitpoints = bot.hitpoints
       }
     }
   }
 
   protected def initialSetup() = {
-    require(commanders.size <= scenario.startingPositions.length)
-    val startingPositions = scenario.startingPositions.iterator
+    require(commanders.size <= scenario.map.startingPositions.length)
+    val startingPositions = scenario.map.startingPositions.iterator
     commanders foreach { commander =>
+      val pos = startingPositions.next
       val bot = new Bot {
         val id = 1
-        val position = startingPositions.next
+        val row = pos.row
+        val col = pos.col
         def hitpoints = 100
       }
       setBotsFor(commanderToId(commander), Set(bot))

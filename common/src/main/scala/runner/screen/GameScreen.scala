@@ -144,8 +144,8 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
 
   private def drawBots() = {
     simulation.bots foreach { bot =>
-      val (x, y) = bot.position
       val commanderString =  s"p${bot.commanderId+1}"
+      val (x, y) = tileCoord(row=bot.row, col=bot.col)
       game.batch.draw(objectSprites(commanderString), x, y)
     }
   }
@@ -191,15 +191,10 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     (col * tilesize, game.height-(row * tilesize)-tilesize)
 
   private def buildSimulation = {
+    val self = this
     val commanders = BotCommanderLoader.loadFromEnv
     val scenario = new Scenario {
-      val mapRows = map.rowCount
-      val mapCols = map.colCount
-      val startingPositions = List(
-        (50, 50),
-        (100, 100),
-        (150, 150),
-        (200, 200))
+      val map = self.map
     }
     Simulation(commanders, scenario)
   }
@@ -210,10 +205,14 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     camera
   }
 
-  private def buildTerrainSprites = Map(
-    '.' -> new TextureRegion(terrainTexture, 0, 0, tilesize, tilesize),
-    '~' -> new TextureRegion(terrainTexture, 1 * tilesize, 0, tilesize, tilesize)
-  )
+  private def buildTerrainSprites = {
+    val walkable = new TextureRegion(terrainTexture, 0, 0, tilesize, tilesize)
+    val water = new TextureRegion(terrainTexture, 1 * tilesize, 0, tilesize, tilesize)
+    Map(
+      '.' -> walkable,
+      '~' -> water
+    ).withDefaultValue(walkable)
+  }
 
   private def buildObjectSprites = Map(
     "p1" -> new TextureRegion(objectTexture, 0, 0, tilesize, tilesize),

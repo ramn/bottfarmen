@@ -8,7 +8,11 @@ trait TileMap {
   val rowCount: Int
   val colCount: Int
   def rows: IndexedSeq[IndexedSeq[Tile]]
+  def startingPositions: Seq[StartingPosition]
 }
+
+
+case class StartingPosition(id: Int, row: Int, col: Int)
 
 
 object TileMap {
@@ -44,10 +48,20 @@ object TileMap {
       if isMap(row)
     } yield row.trim.drop(2).toIndexedSeq
 
+    val startingPos = {
+      for {
+        (rows, rowIx) <- map.zipWithIndex
+        (cell, colIx) <- rows.zipWithIndex
+        if cell.isDigit
+        id = cell.toString.toInt
+      } yield StartingPosition(id=id, row=rowIx, col=colIx)
+    }.sortBy(_.id)
+
     new TileMap {
       val rowCount = headers("rows").toInt
       val colCount = headers("cols").toInt
       val rows = map
+      val startingPositions = startingPos
     }
   }
 }
