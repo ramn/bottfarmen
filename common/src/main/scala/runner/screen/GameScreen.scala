@@ -36,6 +36,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     '.' -> new TextureRegion(terrainSprites, 0, 0, tilesize, tilesize),
     '~' -> new TextureRegion(terrainSprites, 1 * tilesize, 0, tilesize, tilesize)
   )
+  private val map = TileMap.loadFromFile("assets/data/testmap.txt")
   private var gameTimeSecs = 0f
 
   override def render(delta: Float) {
@@ -100,20 +101,25 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
 
     // draw between batch.begin() and batch.end()
     game.batch.begin()
-    val map = TileMap.loadFromFile("assets/data/testmap.txt")
+    drawTerrain()
+    drawBots()
+    game.batch.end()
+  }
 
+  private def drawTerrain() = {
     for {
       (row, rowIx) <- map.rows.zipWithIndex
       (cell, colIx) <- row.zipWithIndex
       (x, y) = tileCoord(rowIx, colIx)
     } game.batch.draw(sprites(cell), x, y)
+  }
 
+  private def drawBots() = {
     commanderArbiter.bots foreach { bot =>
       val (x, y) = bot.position
       val text =  s"C${bot.commanderId}B${bot.id}"
       game.font.draw(game.batch, text, x, y)
     }
-    game.batch.end()
   }
 
   private def tileCoord(row: Int, col: Int): (Int, Int) = (col * tilesize, game.height-(row * tilesize)-tilesize)
