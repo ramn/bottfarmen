@@ -14,6 +14,10 @@ trait TileMap {
 object TileMap {
   type Tile = Char
 
+  def loadFromFile(path: String): TileMap = {
+    parse(io.Source.fromFile(path).getLines.mkString)
+  }
+
   def parse(rawMap: String): TileMap = {
     def isComment(row: String) = row.trim.startsWith("#")
     def isMap(row: String) = row.trim.startsWith("m ")
