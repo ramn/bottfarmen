@@ -10,6 +10,7 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector3
@@ -18,17 +19,19 @@ import com.badlogic.gdx.utils.TimeUtils
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
+import com.badlogic.gdx.graphics.g2d.{TextureRegion, Sprite}
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 
 import se.ramn.bottfarmen.runner.BottfarmenGuiRunner
 import se.ramn.bottfarmen.engine.{TileMap, BotCommanderLoader, BotCommanderArbiter, Scenario}
 import se.ramn.bottfarmen.util.Times
-import com.badlogic.gdx.graphics.g2d.{TextureRegion, Sprite}
 
 
 class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   val tilesize = 16
   private val commanderArbiter = buildCommanderArbiter
   private val camera = buildCamera
+  private val shapeRenderer = new ShapeRenderer
   private val turnIntervalSecs = 1f
   private val terrainTexture = new Texture(Gdx.files.internal("assets/data/terrainsprites.png"))
   private val objectTexture = new Texture(Gdx.files.internal("assets/data/objectsprites.png"))
@@ -41,6 +44,16 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     "p2" -> new TextureRegion(objectTexture, 1 * tilesize, 0, tilesize, tilesize)
   )
   private val map = TileMap.loadFromFile("assets/data/testmap.txt")
+  private object propertiesHud {
+    val leftOffset = 1050
+    val leftBorderOffset = leftOffset - 50
+    val propertiesOffset = game.height - 40
+    val propertiesBoxHeight = 100
+    def propsOffsets = Iterator.iterate(propertiesOffset) { x =>
+      x - propertiesBoxHeight
+    }
+  }
+
   private var gameTimeSecs = 0f
 
   override def render(delta: Float) {
@@ -103,6 +116,9 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     game.batch.begin()
     drawTerrain()
     drawBots()
+    game.batch.end()
+    drawPropertiesHudFrame()
+    game.batch.begin()
     drawBotProperties()
     game.batch.end()
   }
@@ -131,16 +147,31 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     }
   }
 
+  private def drawPropertiesHudFrame() = {
+    import propertiesHud._
+    shapeRenderer.setProjectionMatrix(camera.combined)
+    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
+    shapeRenderer.setColor(Color.BLACK)
+    shapeRenderer.rect(
+      leftBorderOffset, 0,
+      game.width - leftBorderOffset, game.height)
+    shapeRenderer.end()
+
+    shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
+    shapeRenderer.setColor(Color.WHITE)
+    shapeRenderer.line(
+      leftBorderOffset, game.height,
+      leftBorderOffset, 0)
+    shapeRenderer.end()
+  }
+
   private def drawBotProperties() = {
-    val propertiesOffset = game.height - 40
-    val propertiesBoxHeight = 100
-    val propsOffsets = Iterator.iterate(propertiesOffset) { x =>
-      x - propertiesBoxHeight
-    }
+    import propertiesHud._
+    val offsets = propsOffsets
     commanderArbiter.bots foreach { bot =>
-      val offset = propsOffsets.next
-      val (x, y) = (1000, offset)
+      val (x, y) = (leftOffset, offsets.next)
       val text =  s"C${bot.commanderId}B${bot.id}"
+      game.batch.setColor(Color.WHITE)
       game.font.draw(game.batch, text, x, y)
     }
   }
