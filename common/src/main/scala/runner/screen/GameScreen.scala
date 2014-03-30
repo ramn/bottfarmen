@@ -29,8 +29,8 @@ import se.ramn.bottfarmen.util.Times
 
 class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   val tilesize = 16
-  private val commanderArbiter = buildCommanderArbiter
-  private val camera = buildCamera
+  private lazy val commanderArbiter = buildCommanderArbiter
+  private lazy val camera = buildCamera
   private val shapeRenderer = new ShapeRenderer
   private val turnIntervalSecs = 1f
   private val terrainTexture = new Texture(Gdx.files.internal("assets/data/terrainsprites.png"))
@@ -43,14 +43,14 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     "p1" -> new TextureRegion(objectTexture, 0, 0, tilesize, tilesize),
     "p2" -> new TextureRegion(objectTexture, 1 * tilesize, 0, tilesize, tilesize)
   )
-  private val map = TileMap.loadFromFile("assets/data/testmap.txt")
+  private lazy val map = TileMap.loadFromFile("assets/data/testmap.txt")
   private object propertiesHud {
     val leftOffset = 1050
     val leftBorderOffset = leftOffset - 50
     val propertiesOffset = game.height - 40
-    val propertiesBoxHeight = 100
-    def propsOffsets = Iterator.iterate(propertiesOffset) { x =>
-      x - propertiesBoxHeight
+    val lineHeight = 18
+    def hudLineOffsetsIter = Iterator.iterate(propertiesOffset) { x =>
+      x - lineHeight
     }
   }
 
@@ -173,12 +173,16 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
 
   private def drawBotProperties() = {
     import propertiesHud._
-    val offsets = propsOffsets
-    commanderArbiter.bots foreach { bot =>
+    val offsets = hudLineOffsetsIter
+    def drawtextln(text: String) = {
       val (x, y) = (leftOffset, offsets.next)
-      val text =  s"C${bot.commanderId}B${bot.id}"
-      game.batch.setColor(Color.WHITE)
       game.font.draw(game.batch, text, x, y)
+    }
+    game.batch.setColor(Color.WHITE)
+    commanderArbiter.bots foreach { bot =>
+      drawtextln(s"Commander id: ${bot.commanderId}")
+      drawtextln(s"Bot id: ${bot.id}")
+      drawtextln("")
     }
   }
 
