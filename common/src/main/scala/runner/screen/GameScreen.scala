@@ -35,14 +35,8 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   private val turnIntervalSecs = 1f
   private val terrainTexture = new Texture(Gdx.files.internal("assets/data/terrainsprites.png"))
   private val objectTexture = new Texture(Gdx.files.internal("assets/data/objectsprites.png"))
-  private val terrainSprites = Map(
-    '.' -> new TextureRegion(terrainTexture, 0, 0, tilesize, tilesize),
-    '~' -> new TextureRegion(terrainTexture, 1 * tilesize, 0, tilesize, tilesize)
-  )
-  private val objectSprites = Map(
-    "p1" -> new TextureRegion(objectTexture, 0, 0, tilesize, tilesize),
-    "p2" -> new TextureRegion(objectTexture, 1 * tilesize, 0, tilesize, tilesize)
-  )
+  private lazy val terrainSprites = buildTerrainSprites
+  private lazy val objectSprites = buildObjectSprites
   private lazy val map = TileMap.loadFromFile("assets/data/testmap.txt")
   private object propertiesHud {
     val leftOffset = 1050
@@ -212,4 +206,14 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     camera.setToOrtho(false, game.width, game.height)
     camera
   }
+
+  private def buildTerrainSprites = Map(
+    '.' -> new TextureRegion(terrainTexture, 0, 0, tilesize, tilesize),
+    '~' -> new TextureRegion(terrainTexture, 1 * tilesize, 0, tilesize, tilesize)
+  )
+
+  private def buildObjectSprites = Map(
+    "p1" -> new TextureRegion(objectTexture, 0, 0, tilesize, tilesize),
+    "p2" -> new TextureRegion(objectTexture, 1 * tilesize, 0, tilesize, tilesize)
+  )
 }
