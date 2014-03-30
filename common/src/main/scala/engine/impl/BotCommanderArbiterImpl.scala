@@ -6,6 +6,7 @@ import se.ramn.bottfarmen.api.BotCommander
 import se.ramn.bottfarmen.api.GameState
 import se.ramn.bottfarmen.api.Bot
 import se.ramn.bottfarmen.engine.BotCommanderArbiter
+import se.ramn.bottfarmen.engine.BotCommanderView
 import se.ramn.bottfarmen.engine.BotView
 import se.ramn.bottfarmen.engine.Scenario
 
@@ -28,14 +29,27 @@ class BotCommanderArbiterImpl(
     // TODO: evaluate commands ...
   }
 
-  override def bots = {
-    for {
-      (cmdrId, bots) <- botsByCommanderId
-      bot <- bots
-    } yield new BotView {
-      val id = bot.id
-      val commanderId = cmdrId
-      val position = bot.position
+  override def botCommanders = commanders map commanderView
+
+  override def bots = commanders flatMap botViewsForCommander
+
+  def commanderView(commander: BotCommander): BotCommanderView = {
+    new BotCommanderView {
+      val id = commanderToId(commander)
+      val name = commander.name
+      val bots = botViewsForCommander(commander)
+    }
+  }
+
+  def botViewsForCommander(commander: BotCommander): Iterable[BotView] = {
+    val cmdrId = commanderToId(commander)
+    botsByCommanderId(cmdrId) map { bot =>
+      new BotView {
+        val id = bot.id
+        val commanderId = cmdrId
+        val position = bot.position
+        val hitpoints = bot.hitpoints
+      }
     }
   }
 

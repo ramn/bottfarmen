@@ -179,9 +179,13 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
       game.font.draw(game.batch, text, x, y)
     }
     game.batch.setColor(Color.WHITE)
-    commanderArbiter.bots foreach { bot =>
-      drawtextln(s"Commander id: ${bot.commanderId}")
-      drawtextln(s"Bot id: ${bot.id}")
+    commanderArbiter.botCommanders foreach { commander =>
+      drawtextln(commander.name)
+      drawtextln(s"Commander id: ${commander.id}")
+      commander.bots foreach { bot =>
+        drawtextln(s"Bot id: ${bot.id}")
+        drawtextln(s"Bot hitpoints: ${bot.hitpoints}")
+      }
       drawtextln("")
     }
   }

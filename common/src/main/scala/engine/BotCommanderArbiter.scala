@@ -8,6 +8,7 @@ import impl.BotCommanderArbiterImpl
 
 trait BotCommanderArbiter {
   def doTurn: Unit
+  def botCommanders: Iterable[BotCommanderView]
   def bots: Iterable[BotView]
 }
 
