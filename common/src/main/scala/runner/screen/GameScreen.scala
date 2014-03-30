@@ -138,7 +138,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     for {
       (row, rowIx) <- map.rows.zipWithIndex
       (cell, colIx) <- row.zipWithIndex
-      (x, y) = tileCoord(rowIx, colIx)
+      (x, y) = tileCoord(row=rowIx, col=colIx)
     } game.batch.draw(terrainSprites(cell), x, y)
   }
 
