@@ -16,8 +16,9 @@ class SimulationImpl(
   scenario: Scenario
 ) extends Simulation {
 
-  var botsByCommanderId: Map[Int, Set[Bot]] = Map()
   val commanderToId = commanders.zipWithIndex.toMap
+
+  var botsByCommanderId: Map[Int, Set[Bot]] = Map()
 
   initialSetup()
 
