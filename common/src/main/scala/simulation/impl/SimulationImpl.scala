@@ -39,6 +39,7 @@ class SimulationImpl(
         case Move(botId, steps) if !steps.isEmpty =>
           val botMaybe = botsByCommander(commander).find(_.id == botId)
           botMaybe foreach { bot =>
+            // TODO: handle more than one step
             val step = steps.filter("nsew".toSet).head
             val (targetRow, targetCol) = step match {
               case 'n' => (bot.row - 1) -> bot.col
