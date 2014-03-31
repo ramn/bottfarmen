@@ -1,5 +1,6 @@
 package se.ramn.bottfarmen.example
 
+import collection.JavaConverters._
 import se.ramn.bottfarmen.api.Bot
 
 
@@ -9,6 +10,7 @@ trait MyBot {
   def setUnderlying(bot: Bot): Unit = {
     underlying = bot
   }
+  def enemiesInSight = underlying.enemiesInSight.asScala
 }
 
 object MyBot {
