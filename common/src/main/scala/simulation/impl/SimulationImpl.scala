@@ -102,6 +102,9 @@ class SimulationImpl(
     new GameState {
       def turn = 0
       def bots = immutableBots.asJava
+      def terrain = scenario.map.rows.map(_.mkString).mkString("\n")
+      def rowCount = scenario.map.rowCount
+      def colCount = scenario.map.colCount
     }
   }
 }
