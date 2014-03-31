@@ -21,7 +21,7 @@ class SimulationImpl(
   val commanderToId = commanders.zipWithIndex.toMap
   lazy val view = new SimulationView(this)
 
-  var botsByCommander: Map[BotCommander, Set[MutableBot]] = Map()
+  var botsFor: Map[BotCommander, Set[MutableBot]] = Map()
 
   initialSetup()
 
@@ -37,7 +37,7 @@ class SimulationImpl(
     } {
       command match {
         case Move(botId, steps) if !steps.isEmpty =>
-          val botMaybe = botsByCommander(commander).find(_.id == botId)
+          val botMaybe = botsFor(commander).find(_.id == botId)
           botMaybe foreach { bot =>
             // TODO: handle more than one step
             val step = steps.filter("nsew".toSet).head
@@ -55,7 +55,7 @@ class SimulationImpl(
               val targetTile = scenario.map.rows(targetRow)(targetCol)
               targetTile match {
                 case '~' =>
-                  setBotsFor(commander, botsByCommander(commander) - bot)
+                  setBotsFor(commander, botsFor(commander) - bot)
                 case _ =>
                   bot.row = targetRow
                   bot.col = targetCol
@@ -87,11 +87,11 @@ class SimulationImpl(
   }
 
   protected def setBotsFor(commander: BotCommander, bots: Set[MutableBot]) = {
-    botsByCommander = botsByCommander.updated(commander, bots)
+    botsFor = botsFor.updated(commander, bots)
   }
 
   protected def gameStateFor(commander: BotCommander): GameState = {
-    val immutableBots: Seq[Bot] = botsByCommander(commander).toList.map { bot =>
+    val immutableBots: Seq[Bot] = botsFor(commander).toList.map { bot =>
       new Bot {
         val id = bot.id
         val row = bot.row
@@ -116,7 +116,7 @@ abstract class MutableBot(val id: Int) extends Bot {
 
 trait ViewableSimulation {
   val commanderToId: Map[BotCommander, Int]
-  def botsByCommander: Map[BotCommander, Set[MutableBot]]
+  def botsFor: Map[BotCommander, Set[MutableBot]]
 }
 
 
@@ -128,7 +128,7 @@ class SimulationView(viewableSimulation: ViewableSimulation) {
 
   def bots = commanders flatMap botViewsForCommander
 
-  protected def botsByCommander = viewableSimulation.botsByCommander
+  protected def botsFor = viewableSimulation.botsFor
 
   protected def commanderView(commander: BotCommander): BotCommanderView = {
     new BotCommanderView {
@@ -139,7 +139,7 @@ class SimulationView(viewableSimulation: ViewableSimulation) {
   }
 
   protected def botViewsForCommander(commander: BotCommander): Iterable[BotView] = {
-    botsByCommander(commander) map { bot =>
+    botsFor(commander) map { bot =>
       new BotView {
         val id = bot.id
         val commanderId = commanderToId(commander)
