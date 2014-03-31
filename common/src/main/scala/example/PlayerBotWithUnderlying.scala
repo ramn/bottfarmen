@@ -23,7 +23,10 @@ object MyBot {
     }
     val newGameStateBots = gameStateBots.filterNot(b => myBotsById.keySet(b.id))
     val myNewBots = newGameStateBots.map(b => myBotFactory(b))
-    val myOldBots = myBotsById.values.toSet
+    // drop bots that are removed serverside
+    val myOldBots = myBotsById.values.filter { myBot =>
+      gameStateBots.map(_.id).toSet(myBot.id)
+    }
     myOldBots.toSet ++ myNewBots.toSet
   }
 }
