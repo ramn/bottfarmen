@@ -90,8 +90,14 @@ class SimulationImpl(
   }
 
   protected def gameStateFor(commander: BotCommander): GameState = {
-    // TODO: build proper game state
-    val immutableBots: Seq[Bot] = botsByCommander(commander).toList
+    val immutableBots: Seq[Bot] = botsByCommander(commander).toList.map { bot =>
+      new Bot {
+        val id = bot.id
+        val row = bot.row
+        val col = bot.col
+        val hitpoints = bot.hitpoints
+      }
+    }
     new GameState {
       def turn = 0
       def bots = immutableBots.asJava
