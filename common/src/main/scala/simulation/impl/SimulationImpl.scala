@@ -127,7 +127,6 @@ class SimulationImpl(
   protected def positionsVisibleFor(bot: MutableBot): Set[(Int, Int)] = {
     val sightRange = 5
     type Pos = (Int, Int)
-    // use a floodfill
     def neighbours(pos: Pos): Set[Pos] = {
       val (row, col) = pos
       Set(
