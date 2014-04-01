@@ -23,14 +23,12 @@ class DummyBotCommander extends BotCommander {
   }
 
   def selectCommands(gameState: GameState) = {
+    val enemiesInSight = bots.flatMap(_.enemiesInSight)
     val directions = "nwse".toSeq
     def nextRandomDir = directions(util.Random.nextInt(directions.length))
-
     bots.toList.map { bot =>
       Move(bot.id, nextRandomDir.toString)
     }.asInstanceOf[List[Command]].asJava
-
-    //List.empty[Command].asJava
   }
 
   def updateMyBotsFromGameState(gameState: GameState) = {
