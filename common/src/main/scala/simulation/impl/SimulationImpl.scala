@@ -1,7 +1,6 @@
 package se.ramn.bottfarmen.simulation.impl
 
 import collection.JavaConverters._
-import collection.immutable.Queue
 
 import se.ramn.bottfarmen.api.BotCommander
 import se.ramn.bottfarmen.api.GameState
@@ -13,6 +12,8 @@ import se.ramn.bottfarmen.simulation.Simulation
 import se.ramn.bottfarmen.simulation.BotCommanderView
 import se.ramn.bottfarmen.simulation.BotView
 import se.ramn.bottfarmen.simulation.Scenario
+import se.ramn.bottfarmen.simulation.entity.Position
+import se.ramn.bottfarmen.simulation.Geography
 
 
 class SimulationImpl(
@@ -95,11 +96,11 @@ class SimulationImpl(
   protected def gameStateFor(commander: BotCommander): GameState = {
     val immutableBots: Seq[Bot] = botsFor(commander).toList.map { bot =>
       val otherCommanders = commanders.filterNot(_ == commander)
-      val visibleTiles = positionsVisibleFor(bot)
+      val visibleTiles = Geography.positionsWithinRange(bot.position, range=5)
       val visibleEnemyBots = for {
         commander <- otherCommanders
         bot <- botsFor(commander)
-        if visibleTiles(bot.row -> bot.col)
+        if visibleTiles(bot.position)
       } yield new EnemyBot {
         val commanderId = commanderToId(commander)
         val id = bot.id
@@ -123,37 +124,6 @@ class SimulationImpl(
       def colCount = scenario.map.colCount
     }
   }
-
-  protected def positionsVisibleFor(bot: MutableBot): Set[(Int, Int)] = {
-    val sightRange = 5
-    type Pos = (Int, Int)
-    def neighbours(pos: Pos): Set[Pos] = {
-      val (row, col) = pos
-      Set(
-        (row - 1) -> col,
-        (row + 1) -> col,
-        row -> (col - 1),
-        row -> (col + 1))
-    }
-    var open = Queue(bot.row -> bot.col)
-    var closed = Set.empty[Pos]
-    var distances = Map((bot.row, bot.col) -> 0)
-    while (!open.isEmpty) {
-      val (tile, nextQueue) = open.dequeue
-      open = nextQueue
-      val currentDistance = distances(tile)
-      val neighbourDistance = currentDistance + 1
-      closed = closed + tile
-      if (neighbourDistance <= sightRange) {
-        val currentNeighbours = neighbours(tile).filterNot(closed)
-        open = nextQueue.enqueue(currentNeighbours)
-        val neighboursWithDistances =
-          currentNeighbours.zip(Stream.continually(currentDistance + 1))
-        distances = distances ++ neighboursWithDistances
-      }
-    }
-    distances.keySet
-  }
 }
 
 
@@ -161,6 +131,7 @@ abstract class MutableBot(val id: Int) {
   var row: Int
   var col: Int
   var hitpoints: Int
+  def position = Position(row=row, col=col)
 }
 
 
