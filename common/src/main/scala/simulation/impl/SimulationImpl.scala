@@ -2,9 +2,9 @@ package se.ramn.bottfarmen.simulation.impl
 
 import collection.JavaConverters._
 
+import se.ramn.bottfarmen.api
 import se.ramn.bottfarmen.api.BotCommander
 import se.ramn.bottfarmen.api.GameState
-import se.ramn.bottfarmen.api.Bot
 import se.ramn.bottfarmen.api.Command
 import se.ramn.bottfarmen.api.Move
 import se.ramn.bottfarmen.api.EnemyBot
@@ -24,7 +24,7 @@ class SimulationImpl(
   val commanderToId = commanders.zipWithIndex.toMap
   lazy val view = new SimulationView(this)
 
-  var botsFor: Map[BotCommander, Set[MutableBot]] = Map()
+  var botsFor: Map[BotCommander, Set[Bot]] = Map()
 
   initialSetup()
 
@@ -80,7 +80,7 @@ class SimulationImpl(
     val startingPositions = scenario.map.startingPositions.iterator
     commanders foreach { commander =>
       val pos = startingPositions.next
-      val bot = new MutableBot(1) {
+      val bot = new Bot(1) {
         var row = pos.row
         var col = pos.col
         var hitpoints = 100
@@ -89,12 +89,12 @@ class SimulationImpl(
     }
   }
 
-  protected def setBotsFor(commander: BotCommander, bots: Set[MutableBot]) = {
+  protected def setBotsFor(commander: BotCommander, bots: Set[Bot]) = {
     botsFor = botsFor.updated(commander, bots)
   }
 
   protected def gameStateFor(commander: BotCommander): GameState = {
-    val immutableBots: Seq[Bot] = botsFor(commander).toList.map { bot =>
+    val immutableBots: Seq[api.Bot] = botsFor(commander).toList.map { bot =>
       val otherCommanders = commanders.filterNot(_ == commander)
       val visibleTiles = Geography.positionsWithinRange(bot.position, range=5)
       val visibleEnemyBots = for {
@@ -108,7 +108,7 @@ class SimulationImpl(
         val col = bot.col
         val hitpoints = bot.hitpoints
       }
-      new Bot {
+      new api.Bot {
         val id = bot.id
         val row = bot.row
         val col = bot.col
@@ -127,7 +127,7 @@ class SimulationImpl(
 }
 
 
-abstract class MutableBot(val id: Int) {
+abstract class Bot(val id: Int) {
   var row: Int
   var col: Int
   var hitpoints: Int
@@ -137,7 +137,7 @@ abstract class MutableBot(val id: Int) {
 
 trait ViewableSimulation {
   val commanderToId: Map[BotCommander, Int]
-  def botsFor: Map[BotCommander, Set[MutableBot]]
+  def botsFor: Map[BotCommander, Set[Bot]]
 }
 
 
