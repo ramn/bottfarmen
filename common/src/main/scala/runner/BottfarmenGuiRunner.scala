@@ -5,7 +5,7 @@ import com.badlogic.gdx.Game
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 
-import se.ramn.bottfarmen.runner.screen.MainMenuScreen
+import se.ramn.bottfarmen.runner.screen.GameScreen
 
 
 class BottfarmenGuiRunner(val width: Int, val height: Int) extends Game {
@@ -18,7 +18,7 @@ class BottfarmenGuiRunner(val width: Int, val height: Int) extends Game {
   override def create() {
     myFont = buildFont
     myBatch = new SpriteBatch
-    setScreen(new MainMenuScreen(this))
+    setScreen(new GameScreen(this))
   }
 
   override def render() {
