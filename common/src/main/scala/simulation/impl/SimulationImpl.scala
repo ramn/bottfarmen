@@ -12,8 +12,9 @@ import se.ramn.bottfarmen.simulation.Simulation
 import se.ramn.bottfarmen.simulation.BotCommanderView
 import se.ramn.bottfarmen.simulation.BotView
 import se.ramn.bottfarmen.simulation.Scenario
-import se.ramn.bottfarmen.simulation.entity.Position
 import se.ramn.bottfarmen.simulation.Geography
+import se.ramn.bottfarmen.simulation.entity.Position
+import se.ramn.bottfarmen.simulation.entity.Bot
 
 
 class SimulationImpl(
@@ -124,14 +125,6 @@ class SimulationImpl(
       def colCount = scenario.map.colCount
     }
   }
-}
-
-
-abstract class Bot(val id: Int) {
-  var row: Int
-  var col: Int
-  var hitpoints: Int
-  def position = Position(row=row, col=col)
 }
 
 
