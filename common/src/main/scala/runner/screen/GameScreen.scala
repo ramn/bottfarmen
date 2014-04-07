@@ -206,11 +206,23 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   }
 
   private def buildTerrainSprites = {
-    val walkable = new TextureRegion(terrainTexture, 0, 0, tilesize, tilesize)
-    val water = new TextureRegion(terrainTexture, 1 * tilesize, 0, tilesize, tilesize)
+    def selectTexture(row: Int, col: Int) = {
+      new TextureRegion(
+        terrainTexture,
+        col * tilesize,
+        row * tilesize,
+        tilesize,
+        tilesize)
+    }
+    val walkable = selectTexture(row=0, col=0)
+    val water    = selectTexture(row=0, col=1)
+    val baseBot1 = selectTexture(row=0, col=2)
+    val baseBot2 = selectTexture(row=0, col=3)
     Map(
       '.' -> walkable,
-      '~' -> water
+      '~' -> water,
+      '0' -> baseBot1,
+      '1' -> baseBot2
     ).withDefaultValue(walkable)
   }
 
