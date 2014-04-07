@@ -109,8 +109,9 @@ object Settings {
   }
 }
 
+
 object LibgdxBuild extends Build {
-  val common = Project (
+  val common = Project(
     "common",
     file("common"),
     settings = Settings.common :+ Settings.updateGdxSetting
