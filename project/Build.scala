@@ -1,9 +1,11 @@
 import sbt._
 
 import Keys._
+import sbtassembly.Plugin._
+import AssemblyKeys._
+
 
 object Settings {
-
   lazy val common = Project.defaultSettings ++ Seq(
     version := "0.1",
     scalaVersion := "2.10.3",
@@ -15,13 +17,12 @@ object Settings {
     ),
     javacOptions ++= Seq("-Xlint:unchecked"),
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "1.9.1"
-      )
+      "org.scalatest" %% "scalatest" % "1.9.1")
    )
 
   lazy val desktop = Settings.common ++ Seq (
     fork in Compile := true
-  )
+  ) ++ assemblySettings
 
   //lazy val android = Settings.common ++
     //AndroidProject.androidSettings ++
