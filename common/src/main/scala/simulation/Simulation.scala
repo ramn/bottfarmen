@@ -2,7 +2,6 @@ package se.ramn.bottfarmen.simulation
 
 import collection.immutable.Iterable
 import se.ramn.bottfarmen.api.BotCommander
-import se.ramn.bottfarmen.api.Bot
 import impl.SimulationImpl
 
 
