@@ -8,6 +8,7 @@ import se.ramn.bottfarmen.api.GameState
 import se.ramn.bottfarmen.api.Command
 import se.ramn.bottfarmen.api.Move
 import se.ramn.bottfarmen.api.EnemyBot
+import se.ramn.bottfarmen.api.Base
 import se.ramn.bottfarmen.simulation.Simulation
 import se.ramn.bottfarmen.simulation.BotCommanderView
 import se.ramn.bottfarmen.simulation.BotView
@@ -117,12 +118,18 @@ class SimulationImpl(
         val enemiesInSight = visibleEnemyBots.toList.asJava
       }
     }
+    val theHomeBase = new Base {
+      val hitpoints = 100
+      val row = 0
+      val col = 0
+    }
     new GameState {
       def turn = 0
       def bots = immutableBots.asJava
       def terrain = scenario.map.rows.map(_.mkString).mkString("\n")
       def rowCount = scenario.map.rowCount
       def colCount = scenario.map.colCount
+      def homeBase = theHomeBase
     }
   }
 }

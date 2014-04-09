@@ -7,4 +7,5 @@ trait GameState {
   def terrain: String
   def rowCount: Int
   def colCount: Int
+  def homeBase: Base
 }
