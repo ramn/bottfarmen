@@ -19,14 +19,10 @@ import se.ramn.bottfarmen.simulation.entity.BotCommander
 
 
 class SimulationImpl(
-  commanders: Set[BotCommander],
+  val commanders: Set[BotCommander],
   scenario: Scenario
-) extends Simulation with ViewableSimulation {
-
-  val commanderToId = commanders.map(c => c -> c.id).toMap
-  lazy val view = new SimulationView(this)
-
-  var botsFor: Map[BotCommander, Set[Bot]] = Map()
+) extends Simulation {
+  lazy val view = new SimulationView(commanders)
 
   initialSetup()
 
@@ -42,7 +38,7 @@ class SimulationImpl(
     } {
       command match {
         case Move(botId, steps) if !steps.isEmpty =>
-          val botMaybe = botsFor(commander).find(_.id == botId)
+          val botMaybe = commander.bots.find(_.id == botId)
           botMaybe foreach { bot =>
             // TODO: handle more than one step
             val step = steps.filter("nsew".toSet).head
@@ -60,7 +56,7 @@ class SimulationImpl(
               val targetTile = scenario.map.rows(targetRow)(targetCol)
               targetTile match {
                 case '~' =>
-                  setBotsFor(commander, botsFor(commander) - bot)
+                  commander.bots -= bot
                 case _ =>
                   bot.row = targetRow
                   bot.col = targetCol
@@ -87,21 +83,17 @@ class SimulationImpl(
         var col = pos.col
         var hitpoints = 100
       }
-      setBotsFor(commander, Set(bot))
+      commander.bots = Set(bot)
     }
   }
 
-  protected def setBotsFor(commander: BotCommander, bots: Set[Bot]) = {
-    botsFor = botsFor.updated(commander, bots)
-  }
-
   protected def gameStateFor(commander: BotCommander): GameState = {
-    val immutableBots: Seq[api.Bot] = botsFor(commander).toList.map { bot =>
+    val immutableBots: Seq[api.Bot] = commander.bots.toList.map { bot =>
       val otherCommanders = commanders.filterNot(_ == commander)
       val visibleTiles = Geography.positionsWithinRange(bot.position, range=5)
       val visibleEnemyBots = for {
         commander <- otherCommanders
-        bot <- botsFor(commander)
+        bot <- commander.bots
         if visibleTiles(bot.position)
       } yield new EnemyBot {
         val commanderId = commander.id

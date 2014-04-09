@@ -6,35 +6,25 @@ import se.ramn.bottfarmen.simulation.BotView
 import se.ramn.bottfarmen.simulation.BotCommanderView
 
 
-trait ViewableSimulation {
-  val commanderToId: Map[BotCommander, Int]
-  def botsFor: Map[BotCommander, Set[Bot]]
-}
-
-
-class SimulationView(viewableSimulation: ViewableSimulation) {
-  protected lazy val commanders = commanderToId.keySet
-  protected lazy val commanderToId = viewableSimulation.commanderToId
+class SimulationView(commanders: Set[BotCommander]) {
 
   def botCommanders = commanders map commanderView
 
   def bots = commanders flatMap botViewsForCommander
 
-  protected def botsFor = viewableSimulation.botsFor
-
   protected def commanderView(commander: BotCommander): BotCommanderView = {
     new BotCommanderView {
-      val id = commanderToId(commander)
+      val id = commander.id
       val name = commander.name
       val bots = botViewsForCommander(commander)
     }
   }
 
   protected def botViewsForCommander(commander: BotCommander): Iterable[BotView] = {
-    botsFor(commander) map { bot =>
+    commander.bots map { bot =>
       new BotView {
         val id = bot.id
-        val commanderId = commanderToId(commander)
+        val commanderId = commander.id
         val row = bot.row
         val col = bot.col
         val hitpoints = bot.hitpoints
