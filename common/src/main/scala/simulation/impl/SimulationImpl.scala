@@ -3,7 +3,6 @@ package se.ramn.bottfarmen.simulation.impl
 import collection.JavaConverters._
 
 import se.ramn.bottfarmen.api
-import se.ramn.bottfarmen.api.BotCommander
 import se.ramn.bottfarmen.api.GameState
 import se.ramn.bottfarmen.api.Command
 import se.ramn.bottfarmen.api.Move
@@ -16,6 +15,7 @@ import se.ramn.bottfarmen.simulation.Scenario
 import se.ramn.bottfarmen.simulation.Geography
 import se.ramn.bottfarmen.simulation.entity.Position
 import se.ramn.bottfarmen.simulation.entity.Bot
+import se.ramn.bottfarmen.simulation.entity.BotCommander
 
 
 class SimulationImpl(
@@ -23,7 +23,7 @@ class SimulationImpl(
   scenario: Scenario
 ) extends Simulation with ViewableSimulation {
 
-  val commanderToId = commanders.zipWithIndex.toMap
+  val commanderToId = commanders.map(c => c -> c.id).toMap
   lazy val view = new SimulationView(this)
 
   var botsFor: Map[BotCommander, Set[Bot]] = Map()
@@ -73,7 +73,7 @@ class SimulationImpl(
 
   def extractCommands: Map[BotCommander, Seq[Command]] =
     commanders.map { commander =>
-      val commands = commander.update(gameStateFor(commander)).asScala
+      val commands = commander.requestCommands(gameStateFor(commander))
       (commander -> commands)
     }.toMap
 
@@ -104,7 +104,7 @@ class SimulationImpl(
         bot <- botsFor(commander)
         if visibleTiles(bot.position)
       } yield new EnemyBot {
-        val commanderId = commanderToId(commander)
+        val commanderId = commander.id
         val id = bot.id
         val row = bot.row
         val col = bot.col

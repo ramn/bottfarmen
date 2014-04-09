@@ -1,8 +1,9 @@
 package se.ramn.bottfarmen.simulation
 
 import collection.immutable.Iterable
-import se.ramn.bottfarmen.api.BotCommander
+import se.ramn.bottfarmen.api
 import impl.SimulationImpl
+import entity.BotCommander
 
 
 trait Simulation {
@@ -14,9 +15,12 @@ trait Simulation {
 
 object Simulation {
   def apply(
-    commanders: Set[BotCommander],
+    playerCommanders: Set[api.BotCommander],
     scenario: Scenario
   ): Simulation = {
+    val commanders = playerCommanders
+      .zipWithIndex
+      .map((BotCommander.apply _).tupled)
     new SimulationImpl(commanders, scenario)
   }
 }

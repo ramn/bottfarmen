@@ -1,7 +1,7 @@
 package se.ramn.bottfarmen.simulation.impl
 
-import se.ramn.bottfarmen.api.BotCommander
 import se.ramn.bottfarmen.simulation.entity.Bot
+import se.ramn.bottfarmen.simulation.entity.BotCommander
 import se.ramn.bottfarmen.simulation.BotView
 import se.ramn.bottfarmen.simulation.BotCommanderView
 
