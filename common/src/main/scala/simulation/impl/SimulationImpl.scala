@@ -3,13 +3,10 @@ package se.ramn.bottfarmen.simulation.impl
 import collection.JavaConverters._
 
 import se.ramn.bottfarmen.api
-import se.ramn.bottfarmen.api.GameState
-import se.ramn.bottfarmen.api.Command
 import se.ramn.bottfarmen.api.Move
-import se.ramn.bottfarmen.api.EnemyBot
 import se.ramn.bottfarmen.simulation.Simulation
 import se.ramn.bottfarmen.simulation.Scenario
-import se.ramn.bottfarmen.simulation.Geography
+import se.ramn.bottfarmen.simulation.GameStateApiGateway
 import se.ramn.bottfarmen.simulation.entity.BotCommander
 
 
@@ -60,49 +57,13 @@ class SimulationImpl(
     }
   }
 
-  def extractCommands: Map[BotCommander, Seq[Command]] =
+  def extractCommands: Map[BotCommander, Seq[api.Command]] =
     commanders.map { commander =>
       val commands = commander.requestCommands(gameStateFor(commander))
       (commander -> commands)
     }.toMap
 
-  protected def gameStateFor(commander: BotCommander): GameState = {
-    val immutableBots: Seq[api.Bot] = commander.bots.toList.map { bot =>
-      val otherCommanders = commanders.filterNot(_ == commander)
-      val visibleTiles = Geography.positionsWithinRange(bot.position, range=5)
-      val visibleEnemyBots = for {
-        commander <- otherCommanders
-        bot <- commander.bots
-        if visibleTiles(bot.position)
-      } yield new EnemyBot {
-        val commanderId = commander.id
-        val id = bot.id
-        val row = bot.row
-        val col = bot.col
-        val hitpoints = bot.hitpoints
-      }
-      new api.Bot {
-        val id = bot.id
-        val row = bot.row
-        val col = bot.col
-        val hitpoints = bot.hitpoints
-        val enemiesInSight = visibleEnemyBots.toList.asJava
-      }
-    }
-    new GameState {
-      val turn = 0
-      val bots = immutableBots.asJava
-      val terrain = scenario.map.rows.map(_.mkString).mkString("\n")
-      val rowCount = scenario.map.rowCount
-      val colCount = scenario.map.colCount
-      val homeBase = apiBaseFrom(commander)
-    }
+  protected def gameStateFor(commander: BotCommander): api.GameState = {
+    new GameStateApiGateway(commanders, scenario).forCommander(commander)
   }
-
-  protected def apiBaseFrom(commander: BotCommander): api.Base =
-    new api.Base {
-      val hitpoints = commander.homeBase.hitpoints
-      val row = commander.homeBase.row
-      val col = commander.homeBase.col
-    }
 }
