@@ -11,6 +11,7 @@ trait BotCommander {
   val name: String
   var bots: Set[Bot]
   def requestCommands(gameState: api.GameState): Seq[api.Command]
+  var homeBase: Base
 }
 
 
@@ -29,6 +30,7 @@ class BotCommanderImpl(
 ) extends BotCommander {
   override val name = playerCommander.name
   override var bots = Set.empty[Bot]
+  override var homeBase: Base = _
   override def requestCommands(gameState: api.GameState) = {
     playerCommander.update(gameState).asScala.toIndexedSeq
   }

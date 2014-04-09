@@ -7,7 +7,6 @@ import se.ramn.bottfarmen.api.GameState
 import se.ramn.bottfarmen.api.Command
 import se.ramn.bottfarmen.api.Move
 import se.ramn.bottfarmen.api.EnemyBot
-import se.ramn.bottfarmen.api.Base
 import se.ramn.bottfarmen.simulation.Simulation
 import se.ramn.bottfarmen.simulation.BotCommanderView
 import se.ramn.bottfarmen.simulation.BotView
@@ -15,6 +14,7 @@ import se.ramn.bottfarmen.simulation.Scenario
 import se.ramn.bottfarmen.simulation.Geography
 import se.ramn.bottfarmen.simulation.entity.Position
 import se.ramn.bottfarmen.simulation.entity.Bot
+import se.ramn.bottfarmen.simulation.entity.Base
 import se.ramn.bottfarmen.simulation.entity.BotCommander
 
 
@@ -78,6 +78,7 @@ class SimulationImpl(
     val startingPositions = scenario.map.startingPositions.iterator
     commanders foreach { commander =>
       val pos = startingPositions.next
+      commander.homeBase = Base(hitpoints=800, row=pos.row, col=pos.col)
       val bot = new Bot(1) {
         var row = pos.row
         var col = pos.col
@@ -110,18 +111,20 @@ class SimulationImpl(
         val enemiesInSight = visibleEnemyBots.toList.asJava
       }
     }
-    val theHomeBase = new Base {
-      val hitpoints = 100
-      val row = 0
-      val col = 0
-    }
     new GameState {
-      def turn = 0
-      def bots = immutableBots.asJava
-      def terrain = scenario.map.rows.map(_.mkString).mkString("\n")
-      def rowCount = scenario.map.rowCount
-      def colCount = scenario.map.colCount
-      def homeBase = theHomeBase
+      val turn = 0
+      val bots = immutableBots.asJava
+      val terrain = scenario.map.rows.map(_.mkString).mkString("\n")
+      val rowCount = scenario.map.rowCount
+      val colCount = scenario.map.colCount
+      val homeBase = apiBaseFrom(commander)
     }
   }
+
+  protected def apiBaseFrom(commander: BotCommander): api.Base =
+    new api.Base {
+      val hitpoints = commander.homeBase.hitpoints
+      val row = commander.homeBase.row
+      val col = commander.homeBase.col
+    }
 }
