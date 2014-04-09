@@ -18,19 +18,20 @@ trait BotCommander {
 object BotCommander {
   def apply(
     playerBotCommander: api.BotCommander,
-    id: Int
+    id: Int,
+    homeBase: Base
   ): BotCommander = {
-      new BotCommanderImpl(id, playerBotCommander)
+      new BotCommanderImpl(id, playerBotCommander, homeBase)
   }
 }
 
 class BotCommanderImpl(
   val id: Int,
-  val playerCommander: api.BotCommander
+  val playerCommander: api.BotCommander,
+  var homeBase: Base
 ) extends BotCommander {
   override val name = playerCommander.name
   override var bots = Set.empty[Bot]
-  override var homeBase: Base = _
   override def requestCommands(gameState: api.GameState) = {
     playerCommander.update(gameState).asScala.toIndexedSeq
   }

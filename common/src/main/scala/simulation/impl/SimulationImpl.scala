@@ -24,8 +24,6 @@ class SimulationImpl(
 ) extends Simulation {
   lazy val view = new SimulationView(commanders)
 
-  initialSetup()
-
   override def botCommanders = view.botCommanders
 
   override def bots = view.bots
@@ -72,21 +70,6 @@ class SimulationImpl(
       val commands = commander.requestCommands(gameStateFor(commander))
       (commander -> commands)
     }.toMap
-
-  protected def initialSetup() = {
-    require(commanders.size <= scenario.map.startingPositions.length)
-    val startingPositions = scenario.map.startingPositions.iterator
-    commanders foreach { commander =>
-      val pos = startingPositions.next
-      commander.homeBase = new Base(hitpoints=800, row=pos.row, col=pos.col)
-      val bot = new Bot(1, commander) {
-        var row = pos.row
-        var col = pos.col
-        var hitpoints = 100
-      }
-      commander.bots = Set(bot)
-    }
-  }
 
   protected def gameStateFor(commander: BotCommander): GameState = {
     val immutableBots: Seq[api.Bot] = commander.bots.toList.map { bot =>
