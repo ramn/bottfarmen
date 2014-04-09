@@ -8,13 +8,8 @@ import se.ramn.bottfarmen.api.Command
 import se.ramn.bottfarmen.api.Move
 import se.ramn.bottfarmen.api.EnemyBot
 import se.ramn.bottfarmen.simulation.Simulation
-import se.ramn.bottfarmen.simulation.BotCommanderView
-import se.ramn.bottfarmen.simulation.BotView
 import se.ramn.bottfarmen.simulation.Scenario
 import se.ramn.bottfarmen.simulation.Geography
-import se.ramn.bottfarmen.simulation.entity.Position
-import se.ramn.bottfarmen.simulation.entity.Bot
-import se.ramn.bottfarmen.simulation.entity.Base
 import se.ramn.bottfarmen.simulation.entity.BotCommander
 
 
