@@ -15,6 +15,7 @@ class SimulationImpl(
   scenario: Scenario
 ) extends Simulation {
   lazy val view = new SimulationView(commanders)
+  lazy val gameStateApiGateway = new GameStateApiGateway(commanders, scenario)
 
   override def botCommanders = view.botCommanders
 
@@ -63,7 +64,6 @@ class SimulationImpl(
       (commander -> commands)
     }.toMap
 
-  protected def gameStateFor(commander: BotCommander): api.GameState = {
-    new GameStateApiGateway(commanders, scenario).forCommander(commander)
-  }
+  protected def gameStateFor(commander: BotCommander): api.GameState =
+    gameStateApiGateway.forCommander(commander)
 }
