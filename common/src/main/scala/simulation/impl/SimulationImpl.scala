@@ -79,7 +79,7 @@ class SimulationImpl(
     commanders foreach { commander =>
       val pos = startingPositions.next
       commander.homeBase = Base(hitpoints=800, row=pos.row, col=pos.col)
-      val bot = new Bot(1) {
+      val bot = new Bot(1, commander) {
         var row = pos.row
         var col = pos.col
         var hitpoints = 100
