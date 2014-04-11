@@ -1,12 +1,17 @@
 package se.ramn.bottfarmen.simulation.impl
 
 import collection.JavaConverters._
+import collection.immutable.Iterable
+import collection.immutable.Seq
+import collection.immutable.IndexedSeq
 
 import se.ramn.bottfarmen.api
 import se.ramn.bottfarmen.api.Move
 import se.ramn.bottfarmen.simulation.Simulation
 import se.ramn.bottfarmen.simulation.Scenario
 import se.ramn.bottfarmen.simulation.GameStateApiGateway
+import se.ramn.bottfarmen.simulation.entity.Bot
+import se.ramn.bottfarmen.simulation.entity.Position
 import se.ramn.bottfarmen.simulation.entity.BotCommander
 
 
@@ -23,14 +28,20 @@ class SimulationImpl(
 
   override def doTurn: Unit = {
     val commandsByCommander = extractCommands
-    for {
-      (commander, commands) <- commandsByCommander
+
+    trait Action
+    case class Goto(bot: Bot, position: Position) extends Action
+
+    val actionMaybes: Seq[Option[Action]] = for {
+      (commander, commands) <- commandsByCommander.toIndexedSeq
       command <- commands
-    } {
+    } yield {
       command match {
         case Move(botId, steps) if !steps.isEmpty =>
-          val botMaybe = commander.bots.find(_.id == botId)
-          botMaybe foreach { bot =>
+          val botMaybe = commander.bots
+            .filter(_.hitpoints > 0)
+            .find(_.id == botId)
+          val maybeAction = botMaybe flatMap { bot =>
             // TODO: handle more than one step
             val step = steps.filter("nsew".toSet).head
             val (targetRow, targetCol) = step match {
@@ -39,18 +50,58 @@ class SimulationImpl(
               case 'w' => bot.row -> (bot.col - 1)
               case 'e' => bot.row -> (bot.col + 1)
             }
-            val isWithinMap = (scenario.map.rowCount >= targetRow
+            val isWithinMap = (
+              scenario.map.rowCount >= targetRow
               && targetRow >= 0
               && scenario.map.colCount >= targetCol
               && targetCol >= 0)
-            if (isWithinMap) {
-              val targetTile = scenario.map.rows(targetRow)(targetCol)
-              targetTile match {
-                case '~' =>
-                  commander.bots -= bot
-                case _ =>
-                  bot.row = targetRow
-                  bot.col = targetCol
+            val targetTile = scenario.map.rows(targetRow)(targetCol)
+            val isWalkable = targetTile != '^' // can't walk on mountains
+            if (isWithinMap && isWalkable) {
+              Some(Goto(bot, Position(row=targetRow, col=targetCol)))
+            } else {
+              None
+            }
+          }
+          // return eligible moves
+          maybeAction
+        case _ => None
+      }
+    }
+    val actions = actionMaybes.flatten
+    val moveActions: Seq[Goto] = actions.collect { case action: Goto => action }
+    val desiredPositionByBot = moveActions.map(move => move.bot -> move.position).toMap
+    val movingBots = desiredPositionByBot.keySet
+    val botsByNextPos: Map[Position, Set[Bot]] = commanders.flatMap(_.bots)
+      .map { bot =>
+        desiredPositionByBot.getOrElse(bot, Position(row=bot.row, col=bot.col)) -> bot
+      }.foldLeft(Map.empty[Position, Set[Bot]]) { (memo, elem) =>
+        memo.updated(elem._1, memo.getOrElse(elem._1, Set.empty[Bot]) + elem._2)
+      }.toMap
+
+    botsByNextPos foreach { case (position, bots) =>
+      val targetTile = scenario.map.rows(position.row)(position.col)
+      targetTile match {
+        case '~' =>
+          // water, dies
+          bots foreach { bot =>
+            bot.hitpoints = 0
+            bot.commander.bots -= bot
+          }
+        case _ if bots.size == 1 =>
+          bots foreach { bot =>
+            bot.row = position.row
+            bot.col = position.col
+          }
+        case _ if bots.size > 1 =>
+          // collision, can't move in but hit eachother. only moving bots deal damage.
+          bots.filter(movingBots) foreach { bot =>
+            val others = bots - bot
+            others foreach { other =>
+              println(s"C${bot.commander.id}B${bot.id} hits C${other.commander.id}B${other.id}")
+              other.hitpoints -= bot.attackStrength
+              if (other.hitpoints <= 0) {
+                other.commander.bots -= other
               }
             }
           }
