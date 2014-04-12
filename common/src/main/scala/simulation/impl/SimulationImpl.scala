@@ -10,6 +10,7 @@ import se.ramn.bottfarmen.api.Move
 import se.ramn.bottfarmen.simulation.Simulation
 import se.ramn.bottfarmen.simulation.Scenario
 import se.ramn.bottfarmen.simulation.GameStateApiGateway
+import se.ramn.bottfarmen.simulation.MoveResolver
 import se.ramn.bottfarmen.simulation.entity.Bot
 import se.ramn.bottfarmen.simulation.entity.Position
 import se.ramn.bottfarmen.simulation.entity.BotCommander
@@ -68,45 +69,14 @@ class SimulationImpl(
         case _ => None
       }
     }
+
     val actions = actionMaybes.flatten
     val moveActions: Seq[Goto] = actions.collect { case action: Goto => action }
     val desiredPositionByBot = moveActions.map(move => move.bot -> move.position).toMap
     val movingBots = desiredPositionByBot.keySet
-    val botsByNextPos: Map[Position, Set[Bot]] = commanders.flatMap(_.bots)
-      .map { bot =>
-        desiredPositionByBot.getOrElse(bot, Position(row=bot.row, col=bot.col)) -> bot
-      }.foldLeft(Map.empty[Position, Set[Bot]]) { (memo, elem) =>
-        memo.updated(elem._1, memo.getOrElse(elem._1, Set.empty[Bot]) + elem._2)
-      }.toMap
-
-    botsByNextPos foreach { case (position, bots) =>
-      val targetTile = scenario.map.rows(position.row)(position.col)
-      targetTile match {
-        case '~' =>
-          // water, dies
-          bots foreach { bot =>
-            bot.hitpoints = 0
-            bot.commander.bots -= bot
-          }
-        case _ if bots.size == 1 =>
-          bots foreach { bot =>
-            bot.row = position.row
-            bot.col = position.col
-          }
-        case _ if bots.size > 1 =>
-          // collision, can't move in but hit eachother. only moving bots deal damage.
-          bots.filter(movingBots) foreach { bot =>
-            val others = bots - bot
-            others foreach { other =>
-              println(s"C${bot.commander.id}B${bot.id} hits C${other.commander.id}B${other.id}")
-              other.hitpoints -= bot.attackStrength
-              if (other.hitpoints <= 0) {
-                other.commander.bots -= other
-              }
-            }
-          }
-      }
-    }
+    val stillBots = commanders.flatMap(_.bots) -- movingBots
+    val moveResolver = new MoveResolver(desiredPositionByBot, stillBots, scenario)
+    moveResolver.resolve()
   }
 
   def extractCommands: Map[BotCommander, Seq[api.Command]] =
