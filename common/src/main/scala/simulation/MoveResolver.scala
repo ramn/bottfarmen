@@ -2,6 +2,7 @@ package se.ramn.bottfarmen.simulation
 
 import se.ramn.bottfarmen.simulation.entity.Bot
 import se.ramn.bottfarmen.simulation.entity.Position
+import se.ramn.bottfarmen.simulation.TileMap.Tile
 
 
 class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenario) {
@@ -16,7 +17,13 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
     //    should know if the target tile is occupied by a blocked bot or not.
     //
 
-    def groupByPosition(movers: Map[Bot, Position]): Map[Position, Set[Bot]] = {
+    type Movers = Map[Bot, Position]
+
+    def tile(position: Position): Option[Tile] = {
+      scenario.tilemap.tile(position)
+    }
+
+    def groupByPosition(movers: Movers): Map[Position, Set[Bot]] = {
       val foldInit = Map.empty[Position, Set[Bot]]
       val moversByPosition = movers.foldLeft(foldInit) { (memo, elem) =>
         val (bot, pos) = elem
@@ -25,27 +32,33 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
       moversByPosition
     }
 
-    def resolveWater(moversLeft: Map[Bot, Position]): Map[Bot, Position] = {
-      val byPosition = groupByPosition(moversLeft)
-      byPosition.foldLeft(moversLeft) { (memo, elem) =>
-        val (targetPos, bots) = elem
-        val targetTile = scenario.tilemap.rows(targetPos.row)(targetPos.col)
-        if (targetTile == '~') {
-          bots foreach { bot =>
-            bot.hitpoints = 0
-            bot.commander.bots -= bot
-          }
-          memo -- bots
-        } else {
-          memo
+    def partiallyResolve(
+      thunk: (Movers, Position, Set[Bot]) => Movers
+    ): Function1[Movers, Movers] = {
+      (moversLeft) => {
+        val byPosition = groupByPosition(moversLeft)
+        byPosition.foldLeft(moversLeft) { (memo, elem) =>
+          val (targetPos, bots) = elem
+          thunk(memo, targetPos, bots)
         }
       }
     }
 
-    def resolveTileHasNonmovingOccupant(moversLeft: Map[Bot, Position]): Map[Bot, Position] = {
-      val byPosition = groupByPosition(moversLeft)
-      byPosition.foldLeft(moversLeft) { (memo, elem) =>
-        val (targetPos, bots) = elem
+    val resolveWater = partiallyResolve { (moversLeft, targetPos, bots) =>
+      val targetTile = tile(targetPos).get
+      if (targetTile == '~') {
+        bots foreach { bot =>
+          bot.hitpoints = 0
+          bot.commander.bots -= bot
+        }
+        moversLeft -- bots
+      } else {
+        moversLeft
+      }
+    }
+
+    val resolveTileHasNonmovingOccupant =
+      partiallyResolve { (moversLeft, targetPos, bots) =>
         val targetTileHasNonmovingOccupant = still.exists(_.position == targetPos)
         if (targetTileHasNonmovingOccupant) {
           // collision, can't move in but hit the nonmover. only moving bots deal damage.
@@ -58,17 +71,14 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
               }
             }
           }
-          memo -- bots
+          moversLeft -- bots
         } else {
-          memo
+          moversLeft
         }
       }
-    }
 
-    def resolveCompetingForTile(moversLeft: Map[Bot, Position]): Map[Bot, Position] = {
-      val byPosition = groupByPosition(moversLeft)
-      byPosition.foldLeft(moversLeft) { (memo, elem) =>
-        val (targetPos, bots) = elem
+    val resolveCompetingForTile =
+      partiallyResolve { (moversLeft, targetPos, bots) =>
         if (bots.size > 1) {
           // collision, can't move in but hit eachother. only moving bots deal damage.
           bots foreach { bot =>
@@ -80,17 +90,14 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
               }
             }
           }
-          memo -- bots
+          moversLeft -- bots
         } else {
-          memo
+          moversLeft
         }
       }
-    }
 
-    def resolveLoneOccupant(moversLeft: Map[Bot, Position]): Map[Bot, Position] = {
-      val byPosition = groupByPosition(moversLeft)
-      byPosition.foldLeft(moversLeft) { (memo, elem) =>
-        val (targetPos, bots) = elem
+    val resolveLoneOccupant =
+      partiallyResolve { (moversLeft, targetPos, bots) =>
         val targetTileHasBotWithAbortedMove =
           movers.keys.exists(_.position == targetPos)
         if (bots.size == 1 && !targetTileHasBotWithAbortedMove) {
@@ -98,18 +105,17 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
             bot.row = targetPos.row
             bot.col = targetPos.col
           }
-          memo -- bots
+          moversLeft -- bots
         } else {
-          memo
+          moversLeft
         }
       }
-    }
 
     val pipe =
-      (resolveWater _) andThen
-      (resolveTileHasNonmovingOccupant _) andThen
-      (resolveCompetingForTile _) andThen
-      (resolveLoneOccupant _)
+      resolveWater andThen
+      resolveTileHasNonmovingOccupant andThen
+      resolveCompetingForTile andThen
+      resolveLoneOccupant
 
     val unhandledMovers = pipe(movers)
 
