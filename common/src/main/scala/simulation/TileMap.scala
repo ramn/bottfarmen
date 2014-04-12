@@ -10,7 +10,8 @@ trait TileMap {
   val colCount: Int
   val rows: IndexedSeq[IndexedSeq[Tile]]
   def startingPositions: Seq[StartingPosition]
-  def tile(position: Position): Tile
+  def isWithinMap(position: Position): Boolean
+  def tile(position: Position): Option[Tile]
 }
 
 
@@ -69,8 +70,16 @@ object TileMap {
       override val colCount = headers("cols").toInt
       override val rows = map
       override val startingPositions = startingPos
+      override def isWithinMap(position: Position): Boolean = {
+        val (row, col) = (position.row, position.col)
+        rowCount >= row && row >= 0 && colCount >= col && col >= 0
+      }
       override def tile(position: Position) = {
-        rows(position.row)(position.col)
+        if (isWithinMap(position)) {
+          Some(rows(position.row)(position.col))
+        } else {
+          None
+        }
       }
     }
   }

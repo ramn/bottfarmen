@@ -53,8 +53,9 @@ class SimulationImpl(
               && targetRow >= 0
               && scenario.tilemap.colCount >= targetCol
               && targetCol >= 0)
-            val targetTile = scenario.tilemap.rows(targetRow)(targetCol)
-            val isWalkable = targetTile != '^' // can't walk on mountains
+            val targetTileOpt = scenario.tilemap.tile(Position(row=targetRow, col=targetCol))
+            val mountain = '^'
+            val isWalkable = targetTileOpt.map(_ != mountain).getOrElse(false)
             if (isWithinMap && isWalkable) {
               Some(Goto(bot, Position(row=targetRow, col=targetCol)))
             } else {
