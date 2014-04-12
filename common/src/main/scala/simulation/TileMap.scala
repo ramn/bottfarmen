@@ -2,13 +2,15 @@ package se.ramn.bottfarmen.simulation
 
 import collection.immutable.IndexedSeq
 import TileMap.Tile
+import se.ramn.bottfarmen.simulation.entity.Position
 
 
 trait TileMap {
   val rowCount: Int
   val colCount: Int
-  def rows: IndexedSeq[IndexedSeq[Tile]]
+  val rows: IndexedSeq[IndexedSeq[Tile]]
   def startingPositions: Seq[StartingPosition]
+  def tile(position: Position): Tile
 }
 
 
@@ -63,10 +65,13 @@ object TileMap {
     }.sortBy(_.id)
 
     new TileMap {
-      val rowCount = headers("rows").toInt
-      val colCount = headers("cols").toInt
-      val rows = map
-      val startingPositions = startingPos
+      override val rowCount = headers("rows").toInt
+      override val colCount = headers("cols").toInt
+      override val rows = map
+      override val startingPositions = startingPos
+      override def tile(position: Position) = {
+        rows(position.row)(position.col)
+      }
     }
   }
 }
