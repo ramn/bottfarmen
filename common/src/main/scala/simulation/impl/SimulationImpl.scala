@@ -70,12 +70,11 @@ class SimulationImpl(
       }
     }
 
-    val actions = actionMaybes.flatten
-    val moveActions: Seq[Goto] = actions.collect { case action: Goto => action }
-    val desiredPositionByBot = moveActions.map(move => move.bot -> move.position).toMap
-    val movingBots = desiredPositionByBot.keySet
-    val stillBots = commanders.flatMap(_.bots) -- movingBots
-    val moveResolver = new MoveResolver(desiredPositionByBot, stillBots, scenario)
+    val validMoveActions: Seq[Goto] =
+      actionMaybes.flatten.collect { case action: Goto => action }
+    val movers = validMoveActions.map(move => move.bot -> move.position).toMap
+    val stillBots = commanders.flatMap(_.bots) -- movers.keySet
+    val moveResolver = new MoveResolver(movers, stillBots, scenario)
     moveResolver.resolve()
   }
 
