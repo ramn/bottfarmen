@@ -14,7 +14,7 @@ class MoveResolverTest extends FunSuite {
   test("resolve") {
 
     val scenario = new Scenario {
-      val map = TileMap.loadFromFile("common/assets/data/testmap.txt")
+      val map = TileMap.loadFromFile("common/src/test/assets/testmap.txt")
     }
 
     val commander1 = new BotCommander {
