@@ -40,7 +40,8 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     new Texture(Gdx.files.internal("assets/data/objectsprites.png"))
   private lazy val terrainSprites = buildTerrainSprites
   private lazy val objectSprites = buildObjectSprites
-  private lazy val map = TileMap.loadFromFile("assets/data/testmap.txt")
+  private lazy val map = TileMap.fromEnvOrDefault(
+    defaultMapPath="assets/data/testmap.txt")
   private object propertiesHud {
     val leftOffset = 1050
     val leftBorderOffset = leftOffset - 50

@@ -22,6 +22,11 @@ object TileMap {
     parse(io.Source.fromFile(path).mkString)
   }
 
+  def fromEnvOrDefault(defaultMapPath: String) = {
+    val mapPath = sys.env.getOrElse("MAP_FILE", defaultMapPath)
+    loadFromFile(mapPath)
+  }
+
   /*
    * The map file uses the same format as Ants AI Challenge.
    * Comment lines start with #
