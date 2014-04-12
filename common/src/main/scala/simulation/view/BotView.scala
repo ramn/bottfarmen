@@ -1,4 +1,4 @@
-package se.ramn.bottfarmen.simulation
+package se.ramn.bottfarmen.simulation.view
 
 
 trait BotView {

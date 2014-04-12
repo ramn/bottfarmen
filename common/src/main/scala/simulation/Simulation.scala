@@ -6,6 +6,8 @@ import se.ramn.bottfarmen.api
 import se.ramn.bottfarmen.simulation.entity.Bot
 import se.ramn.bottfarmen.simulation.entity.Base
 import se.ramn.bottfarmen.simulation.entity.BotCommander
+import se.ramn.bottfarmen.simulation.view.BotCommanderView
+import se.ramn.bottfarmen.simulation.view.BotView
 
 
 trait Simulation {
