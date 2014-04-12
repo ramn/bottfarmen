@@ -7,4 +7,8 @@ abstract class Bot(val id: Int, val commander: BotCommander) {
   var hitpoints: Int
   def position = Position(row=row, col=col)
   val attackStrength = 40
+
+  override def toString: String = {
+    s"Bot($id, C${commander.id}, HP$hitpoints, $position)"
+  }
 }
