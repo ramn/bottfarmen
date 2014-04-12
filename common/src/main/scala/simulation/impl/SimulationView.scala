@@ -1,4 +1,4 @@
-package se.ramn.bottfarmen.simulation.impl
+package se.ramn.bottfarmen.simulation.view
 
 import se.ramn.bottfarmen.simulation.entity.Bot
 import se.ramn.bottfarmen.simulation.entity.BotCommander

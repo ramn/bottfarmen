@@ -3,7 +3,6 @@ package se.ramn.bottfarmen.simulation
 import collection.immutable.Iterable
 
 import se.ramn.bottfarmen.api
-import se.ramn.bottfarmen.simulation.impl.SimulationImpl
 import se.ramn.bottfarmen.simulation.entity.Bot
 import se.ramn.bottfarmen.simulation.entity.Base
 import se.ramn.bottfarmen.simulation.entity.BotCommander

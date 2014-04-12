@@ -1,4 +1,4 @@
-package se.ramn.bottfarmen.simulation.impl
+package se.ramn.bottfarmen.simulation
 
 import collection.JavaConverters._
 import collection.immutable.Iterable
@@ -7,13 +7,10 @@ import collection.immutable.IndexedSeq
 
 import se.ramn.bottfarmen.api
 import se.ramn.bottfarmen.api.Move
-import se.ramn.bottfarmen.simulation.Simulation
-import se.ramn.bottfarmen.simulation.Scenario
-import se.ramn.bottfarmen.simulation.GameStateApiGateway
-import se.ramn.bottfarmen.simulation.MoveResolver
 import se.ramn.bottfarmen.simulation.entity.Bot
 import se.ramn.bottfarmen.simulation.entity.Position
 import se.ramn.bottfarmen.simulation.entity.BotCommander
+import se.ramn.bottfarmen.simulation.view.SimulationView
 
 
 class SimulationImpl(
