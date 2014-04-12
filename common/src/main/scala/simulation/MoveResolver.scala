@@ -29,7 +29,7 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
       val byPosition = groupByPosition(moversLeft)
       byPosition.foldLeft(moversLeft) { (memo, elem) =>
         val (targetPos, bots) = elem
-        val targetTile = scenario.map.rows(targetPos.row)(targetPos.col)
+        val targetTile = scenario.tilemap.rows(targetPos.row)(targetPos.col)
         if (targetTile == '~') {
           bots foreach { bot =>
             bot.hitpoints = 0

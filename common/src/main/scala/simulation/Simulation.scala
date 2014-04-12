@@ -30,9 +30,9 @@ object Simulation {
     playerCommanders: Set[api.BotCommander],
     scenario: Scenario
   ): Set[BotCommander] = {
-    require(playerCommanders.size <= scenario.map.startingPositions.length)
+    require(playerCommanders.size <= scenario.tilemap.startingPositions.length)
     val commanderId = playerCommanders.zipWithIndex.toMap
-    val startingPositions = scenario.map.startingPositions.iterator
+    val startingPositions = scenario.tilemap.startingPositions.iterator
     playerCommanders map { playerCommander =>
       val pos = startingPositions.next
       val commander = BotCommander(

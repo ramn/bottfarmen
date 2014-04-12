@@ -195,7 +195,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     val self = this
     val commanders = BotCommanderLoader.loadFromEnv
     val scenario = new Scenario {
-      val map = self.map
+      override val tilemap = self.map
     }
     Simulation(commanders, scenario)
   }

@@ -36,9 +36,9 @@ class GameStateApiGateway(
     new api.GameState {
       val turn = 0
       val bots = immutableBots.asJava
-      val terrain = scenario.map.rows.map(_.mkString).mkString("\n")
-      val rowCount = scenario.map.rowCount
-      val colCount = scenario.map.colCount
+      val terrain = scenario.tilemap.rows.map(_.mkString).mkString("\n")
+      val rowCount = scenario.tilemap.rowCount
+      val colCount = scenario.tilemap.colCount
       val homeBase = apiBaseFrom(commander)
     }
   }
