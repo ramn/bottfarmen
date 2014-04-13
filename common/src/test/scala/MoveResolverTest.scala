@@ -105,10 +105,6 @@ class MoveResolverTest extends FunSuite with OneInstancePerTest {
     assert(
       Seq(bot1, bot2, bot3, bot4).map(_.col).forall(_ == 0),
       "All bots should still be in column 0")
-
-    unhandledMovers foreach { unhandledMover =>
-      println(unhandledMover)
-    }
   }
 
   test("chain of bots should move forward like ducks in a row") {
