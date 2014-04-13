@@ -14,6 +14,7 @@ trait Simulation {
   def doTurn: Unit
   def botCommanders: Iterable[BotCommanderView]
   def bots: Iterable[BotView]
+  def turnNo: Int
 }
 
 
