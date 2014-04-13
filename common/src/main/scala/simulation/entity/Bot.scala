@@ -11,4 +11,11 @@ abstract class Bot(val id: Int, val commander: BotCommander) {
   override def toString: String = {
     s"Bot($id, C${commander.id}, HP$hitpoints, $position)"
   }
+
+  def takeDamage(damage: Int) = {
+    hitpoints -= damage
+    if (hitpoints <= 0) {
+      commander.bots -= this
+    }
+  }
 }

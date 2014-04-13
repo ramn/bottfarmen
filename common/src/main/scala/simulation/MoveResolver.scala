@@ -48,8 +48,7 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
       val targetTile = tile(targetPos).get
       if (targetTile == '~') {
         bots foreach { bot =>
-          bot.hitpoints = 0
-          bot.commander.bots -= bot
+          bot.takeDamage(bot.hitpoints)
         }
         moversLeft -- bots
       } else {
@@ -65,10 +64,7 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
           bots foreach { bot =>
             val occupants = still.filter(_.position == targetPos)
             occupants foreach { occupant =>
-              occupant.hitpoints -= bot.attackStrength
-              if (occupant.hitpoints <= 0) {
-                occupant.commander.bots -= occupant
-              }
+              occupant.takeDamage(bot.attackStrength)
             }
           }
           moversLeft -- bots
@@ -84,10 +80,7 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
           bots foreach { bot =>
             val others = bots - bot
             others foreach { other =>
-              other.hitpoints -= bot.attackStrength
-              if (other.hitpoints <= 0) {
-                other.commander.bots -= other
-              }
+              other.takeDamage(bot.attackStrength)
             }
           }
           moversLeft -- bots
