@@ -40,18 +40,22 @@ class SimulationImpl(
   def resolveAttackActions(actions: Seq[Action]) = {
     actions foreach {
       case Attack(attacker, targetPos) =>
-        val occupantsAtTargetPos =
-          commanders.flatMap(_.bots).filter(_.position == targetPos)
-        occupantsAtTargetPos foreach { victim =>
-          victim.takeDamage(attacker.attackStrength)
-        }
-        val enemyBaseAtTargetOpt: Option[Base] = commanders
-            .filterNot(_ == attacker.commander)
-            .map(_.homeBase)
-            .filter(_.position == targetPos)
-            .headOption
-        enemyBaseAtTargetOpt foreach { enemyBase =>
-          enemyBase.takeDamage(attacker.attackStrength)
+        val targetIsWithinRange =
+          (attacker.position.neighbours + attacker.position)(targetPos)
+        if (targetIsWithinRange) {
+          val occupantsAtTargetPos =
+            commanders.flatMap(_.bots).filter(_.position == targetPos)
+          occupantsAtTargetPos foreach { victim =>
+            victim.takeDamage(attacker.attackStrength)
+          }
+          val enemyBaseAtTargetOpt: Option[Base] = commanders
+              .filterNot(_ == attacker.commander)
+              .map(_.homeBase)
+              .filter(_.position == targetPos)
+              .headOption
+          enemyBaseAtTargetOpt foreach { enemyBase =>
+            enemyBase.takeDamage(attacker.attackStrength)
+          }
         }
       case _ =>
     }
