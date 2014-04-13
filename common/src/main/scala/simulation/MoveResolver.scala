@@ -123,5 +123,6 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
       val (bot, pos) = unhandledMover
       println(s"Could not move bot $bot to $pos")
     }
+    unhandledMovers
   }
 }

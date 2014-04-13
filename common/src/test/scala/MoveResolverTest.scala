@@ -76,7 +76,7 @@ class MoveResolverTest extends FunSuite {
       Set.empty,
       scenario)
 
-    target.resolve()
+    val unhandledMovers = target.resolve()
 
     assert(bot1.row === 1)
     assert(bot1.col === 1)
@@ -93,5 +93,8 @@ class MoveResolverTest extends FunSuite {
     assert(bot1.hitpoints === 60)
     assert(bot2.hitpoints === 60)
     assert(bot3.hitpoints === 100)
+
+    assert(unhandledMovers.size === 1)
+    assert(unhandledMovers.keys.head === bot3)
   }
 }
