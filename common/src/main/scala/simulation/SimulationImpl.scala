@@ -20,12 +20,16 @@ class SimulationImpl(
   lazy val view = new SimulationView(commanders)
   lazy val gameStateApiGateway = new GameStateApiGateway(commanders, scenario)
 
+  var turnNo = 0
+
   override def botCommanders = view.botCommanders
 
   override def bots = view.bots
 
   override def doTurn: Unit = {
-    val commandsByCommander = extractCommands
+    turnNo += 1
+
+    val commandsByCommander = extractCommands()
 
     trait Action
     case class Goto(bot: Bot, position: Position) extends Action
@@ -74,12 +78,12 @@ class SimulationImpl(
     moveResolver.resolve()
   }
 
-  def extractCommands: Map[BotCommander, Seq[api.Command]] =
+  def extractCommands(): Map[BotCommander, Seq[api.Command]] =
     commanders.map { commander =>
       val commands = commander.requestCommands(gameStateFor(commander))
       (commander -> commands)
     }.toMap
 
   def gameStateFor(commander: BotCommander): api.GameState =
-    gameStateApiGateway.forCommander(commander)
+    gameStateApiGateway.forCommander(commander, turnNo)
 }

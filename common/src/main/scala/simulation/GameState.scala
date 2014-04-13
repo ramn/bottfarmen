@@ -10,7 +10,7 @@ class GameStateApiGateway(
   commanders: Set[BotCommander],
   scenario: Scenario
 ) {
-  def forCommander(commander: BotCommander): api.GameState = {
+  def forCommander(commander: BotCommander, turnNo: Int): api.GameState = {
     val immutableBots: Seq[api.Bot] = commander.bots.toList.map { bot =>
       val otherCommanders = commanders.filterNot(_ == commander)
       val visibleTiles = Geography.positionsWithinRange(bot.position, range=5)
@@ -34,7 +34,7 @@ class GameStateApiGateway(
       }
     }
     new api.GameState {
-      val turn = 0
+      val turn = turnNo
       val bots = immutableBots.asJava
       val terrain = scenario.tilemap.rows.map(_.mkString).mkString("\n")
       val rowCount = scenario.tilemap.rowCount
