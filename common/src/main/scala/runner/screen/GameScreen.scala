@@ -25,6 +25,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import se.ramn.bottfarmen.runner.BottfarmenGuiRunner
 import se.ramn.bottfarmen.simulation.{TileMap, BotCommanderLoader, Simulation}
 import se.ramn.bottfarmen.simulation.Scenario
+import se.ramn.bottfarmen.simulation.view.BotCommanderView
 import se.ramn.bottfarmen.util.Times
 
 
@@ -145,10 +146,14 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
 
   private def drawBots() = {
     simulation.bots foreach { bot =>
-      val commanderString =  s"p${bot.commanderId+1}"
       val (x, y) = tileCoord(row=bot.row, col=bot.col)
-      game.batch.draw(objectSprites(commanderString), x, y)
+      game.batch.draw(botSprite(bot.commanderId), x, y)
     }
+  }
+
+  private def botSprite(commanderId: Int) = {
+    val commanderString = s"p${commanderId+1}"
+    objectSprites(commanderString)
   }
 
   private def drawPropertiesHudFrame() = {
@@ -176,8 +181,13 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
       val (x, y) = (leftOffset, offsets.next)
       game.font.draw(game.batch, text, x, y)
     }
+    def drawSprite(commander: BotCommanderView) = {
+      val (x, y) = (leftOffset, offsets.next)
+      game.batch.draw(botSprite(commander.id), x, y)
+    }
     game.batch.setColor(Color.WHITE)
     simulation.botCommanders foreach { commander =>
+      drawSprite(commander)
       drawtextln(commander.name)
       drawtextln(s"Commander id: ${commander.id}")
       drawtextln(s"Home base hp: ${commander.homeBase.hitpoints}")
@@ -185,7 +195,9 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
         drawtextln(s"Bot id: ${bot.id}")
         drawtextln(s"Bot hitpoints: ${bot.hitpoints}")
       }
-      drawtextln("")
+      offsets.next
+      offsets.next
+      offsets.next
     }
   }
 
