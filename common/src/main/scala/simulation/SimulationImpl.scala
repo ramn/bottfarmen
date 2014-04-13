@@ -37,12 +37,14 @@ class SimulationImpl(
   }
 
   def resolveAttackActions(actions: Seq[Action]) = {
-    actions foreach { case Attack(attacker, targetPos) =>
-      val occupantsAtTargetPos =
-        commanders.flatMap(_.bots).filter(_.position == targetPos)
-      occupantsAtTargetPos foreach { victim =>
-        victim.takeDamage(attacker.attackStrength)
-      }
+    actions foreach {
+      case Attack(attacker, targetPos) =>
+        val occupantsAtTargetPos =
+          commanders.flatMap(_.bots).filter(_.position == targetPos)
+        occupantsAtTargetPos foreach { victim =>
+          victim.takeDamage(attacker.attackStrength)
+        }
+      case _ =>
     }
   }
 

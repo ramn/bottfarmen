@@ -1,7 +1,7 @@
 package se.ramn.bottfarmen.simulation.entity
 
 
-trait Action {
+sealed trait Action {
   def bot: Bot
 }
 
