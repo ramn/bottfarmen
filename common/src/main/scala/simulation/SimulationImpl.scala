@@ -11,6 +11,7 @@ import se.ramn.bottfarmen.simulation.entity.Position
 import se.ramn.bottfarmen.simulation.entity.BotCommander
 import se.ramn.bottfarmen.simulation.entity.Action
 import se.ramn.bottfarmen.simulation.entity.Move
+import se.ramn.bottfarmen.simulation.entity.Attack
 import se.ramn.bottfarmen.simulation.view.SimulationView
 
 
@@ -31,13 +32,28 @@ class SimulationImpl(
     turnNo += 1
 
     val actionsForTurn = actions(extractCommands())
+    resolveAttackActions(actionsForTurn)
     resolveMoveActions(actionsForTurn)
+  }
+
+  def resolveAttackActions(actions: Seq[Action]) = {
+    actions foreach { case Attack(attacker, targetPos) =>
+      val occupantsAtTargetPos =
+        commanders.flatMap(_.bots).filter(_.position == targetPos)
+      occupantsAtTargetPos foreach { victim =>
+        victim.takeDamage(attacker.attackStrength)
+      }
+    }
   }
 
   def resolveMoveActions(actions: Seq[Action]) = {
     val moveActions: Seq[Move] = actions.collect { case action: Move => action }
-    val movers = moveActions.map(move => move.bot -> move.position).toMap
-    val stillBots = commanders.flatMap(_.bots) -- movers.keySet
+    val livingBots = commanders.flatMap(_.bots).filter(_.hitpoints > 0).toSet
+    val movers = moveActions
+      .filter(move => livingBots(move.bot))
+      .map(move => move.bot -> move.position)
+      .toMap
+    val stillBots = livingBots -- movers.keySet
     val moveResolver = new MoveResolver(movers, stillBots, scenario)
     val unhandledMovers = moveResolver.resolve()
     unhandledMovers foreach { unhandledMover =>
@@ -55,7 +71,8 @@ class SimulationImpl(
     } yield (commander, command)
     val actions: Seq[Action] =
       commanderCommandPairs flatMap { case (commander, command) =>
-        validateMove(commander)(command)
+        val pipe = validateAttack(commander) orElse validateMove(commander)
+        pipe(command)
       }
     filterMaxOneCommandPerBot(actions)
   }
@@ -108,5 +125,20 @@ class SimulationImpl(
         }
       }
       maybeAction
+  }
+
+  def validateAttack(
+    commander: BotCommander
+  ): PartialFunction[api.Command, Option[Action]] = {
+    case api.Attack(botId, targetRow, targetCol) =>
+      val botMaybe = commander.bots
+        .filter(_.hitpoints > 0)
+        .find(_.id == botId)
+      val targetPos = Position(row=targetRow, col=targetCol)
+      val isWithinMap = scenario.tilemap.isWithinMap(targetPos)
+      for {
+        bot <- botMaybe
+        if isWithinMap
+      } yield Attack(bot, targetPos)
   }
 }
