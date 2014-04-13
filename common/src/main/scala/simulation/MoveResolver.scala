@@ -59,7 +59,7 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
     val resolveTileHasNonmovingOccupant =
       partiallyResolve { (moversLeft, targetPos, bots) =>
         val targetTileHasNonmovingOccupant = still
-          .filter(_.alive)
+          .filter(_.isAlive)
           .exists(_.position == targetPos)
         if (targetTileHasNonmovingOccupant) {
           // collision, can't move in but hit the nonmover. only moving bots
@@ -101,7 +101,7 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
         def isHandled(mover: Bot) = !moversLeft.keySet(mover)
         val targetTileHasBotWithAbortedMove =
           movers.keys
-            .filter(_.alive)
+            .filter(_.isAlive)
             .filter(isHandled)
             .exists(_.position == targetPos)
         if (bots.size == 1 && !targetTileHasBotWithAbortedMove) {

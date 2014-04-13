@@ -119,7 +119,7 @@ class SimulationImpl(
   ): PartialFunction[api.Command, Option[Action]] = {
     case api.Move(botId, step) if "nsew".toSet.contains(step) =>
       val botMaybe = commander.bots
-        .filter(_.hitpoints > 0)
+        .filter(_.isAlive)
         .find(_.id == botId)
       val maybeAction = botMaybe flatMap { bot =>
         val (targetRow, targetCol) = step match {
@@ -147,7 +147,7 @@ class SimulationImpl(
   ): PartialFunction[api.Command, Option[Action]] = {
     case api.Attack(botId, targetRow, targetCol) =>
       val botMaybe = commander.bots
-        .filter(_.hitpoints > 0)
+        .filter(_.isAlive)
         .find(_.id == botId)
       val targetPos = Position(row=targetRow, col=targetCol)
       val isWithinMap = scenario.tilemap.isWithinMap(targetPos)

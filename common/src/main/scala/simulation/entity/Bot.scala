@@ -19,5 +19,5 @@ abstract class Bot(val id: Int, val commander: BotCommander) {
     }
   }
 
-  def alive: Boolean = hitpoints > 0
+  def isAlive: Boolean = hitpoints > 0
 }
