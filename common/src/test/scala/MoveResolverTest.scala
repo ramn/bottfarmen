@@ -40,7 +40,7 @@ class MoveResolverTest extends FunSuite with OneInstancePerTest {
     bot
   }
 
-  test("resolve") {
+  test("enemy bots wants the same tile, they stay put but deal damage") {
     val bot1 = createBot(1, commander1, row=1, col=1)
     val bot2 = createBot(2, commander2, row=2, col=2)
     val bot3 = createBot(3, commander1, row=2, col=1)
@@ -75,5 +75,71 @@ class MoveResolverTest extends FunSuite with OneInstancePerTest {
 
     assert(unhandledMovers.size === 1)
     assert(unhandledMovers.keys.head === bot3)
+  }
+
+  test("chain of bots bumping into each other, noone moves, no friendly fire") {
+    val bot1 = createBot(1, commander1, row=1, col=0)
+    val bot2 = createBot(2, commander1, row=2, col=0)
+    val bot3 = createBot(3, commander1, row=3, col=0)
+    val bot4 = createBot(4, commander1, row=4, col=0)
+
+    val target = new MoveResolver(
+      Map(
+        bot2 -> Position(row=1, col=0),
+        bot3 -> Position(row=2, col=0),
+        bot4 -> Position(row=3, col=0)
+        ),
+      Set(bot1),
+      scenario)
+    val unhandledMovers = target.resolve()
+
+    assert(bot1.hitpoints === 100)
+    assert(bot2.hitpoints === 100)
+    assert(bot3.hitpoints === 100)
+    assert(bot4.hitpoints === 100)
+
+    assert(bot1.row === 1)
+    assert(bot2.row === 2)
+    assert(bot3.row === 3)
+    assert(bot4.row === 4)
+    assert(
+      Seq(bot1, bot2, bot3, bot4).map(_.col).forall(_ == 0),
+      "All bots should still be in column 0")
+
+    unhandledMovers foreach { unhandledMover =>
+      println(unhandledMover)
+    }
+  }
+
+  test("chain of bots should move forward like ducks in a row") {
+    val bot1 = createBot(1, commander1, row=1, col=0)
+    val bot2 = createBot(2, commander1, row=2, col=0)
+    val bot3 = createBot(3, commander1, row=3, col=0)
+    val bot4 = createBot(4, commander1, row=4, col=0)
+
+    val target = new MoveResolver(
+      Map(
+        bot1 -> Position(row=0, col=0),
+        bot2 -> Position(row=1, col=0),
+        bot3 -> Position(row=2, col=0),
+        bot4 -> Position(row=3, col=0)
+        ),
+      Set.empty,
+      scenario)
+    val unhandledMovers = target.resolve()
+
+    assert(bot1.hitpoints === 100)
+    assert(bot2.hitpoints === 100)
+    assert(bot3.hitpoints === 100)
+    assert(bot4.hitpoints === 100)
+
+    assert(bot1.row === 0)
+    assert(bot2.row === 1)
+    assert(bot3.row === 2)
+    assert(bot4.row === 3)
+
+    assert(
+      Seq(bot1, bot2, bot3, bot4).map(_.col).forall(_ == 0),
+      "All bots should still be in column 0")
   }
 }

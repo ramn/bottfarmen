@@ -62,8 +62,11 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
         if (targetTileHasNonmovingOccupant) {
           // collision, can't move in but hit the nonmover. only moving bots deal damage.
           bots foreach { bot =>
-            val occupants = still.filter(_.position == targetPos)
-            occupants foreach { occupant =>
+            val enemyOccupants = still
+              .filter(
+                occupant => occupant.position == targetPos &&
+                occupant.commander != bot.commander)
+            enemyOccupants foreach { occupant =>
               occupant.takeDamage(bot.attackStrength)
             }
           }
