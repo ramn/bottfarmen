@@ -29,12 +29,19 @@ class MoveResolverTest extends FunSuite with OneInstancePerTest {
     }
   }
 
-  def createBot(id: Int, commander: BotCommander, row: Int, col: Int): Bot = {
+  def createBot(
+    id: Int,
+    commander: BotCommander,
+    row: Int,
+    col: Int,
+    hitpoints: Int = 100
+  ): Bot = {
     val (myRow, myCol) = (row, col)
+    val myHitpoints = hitpoints
     val bot = new Bot(id, commander) {
       var row = myRow
       var col = myCol
-      var hitpoints = 100
+      var hitpoints = myHitpoints
     }
     commander.bots += bot
     bot
@@ -75,6 +82,38 @@ class MoveResolverTest extends FunSuite with OneInstancePerTest {
 
     assert(unhandledMovers.size === 1)
     assert(unhandledMovers.keys.head === bot3)
+  }
+
+  test("should move into square where bot died") {
+    val bot1 = createBot(1, commander1, row=1, col=1, hitpoints=1)
+    val bot2 = createBot(2, commander2, row=2, col=2)
+    val bot3 = createBot(3, commander1, row=2, col=1)
+
+    val target = new MoveResolver(
+      Map(
+        bot1 -> Position(row=1, col=2),
+        bot2 -> Position(row=1, col=2),
+        bot3 -> Position(row=1, col=1)),
+      Set.empty,
+      scenario)
+
+    val unhandledMovers = target.resolve()
+
+    assert(bot1.row === 1)
+    assert(bot1.col === 1)
+
+    assert(bot2.row === 2)
+    assert(bot2.col === 2)
+
+    assert(bot3.row === 1)
+    assert(bot3.col === 1)
+
+    assert(bot1.hitpoints < 0, "bot1 should die")
+    assert(bot2.hitpoints === 60)
+    assert(bot3.hitpoints === 100)
+
+    assert(commander1.bots === Set(bot3))
+    assert(commander2.bots === Set(bot2))
   }
 
   test("chain of bots bumping into each other, noone moves, no friendly fire") {

@@ -58,9 +58,12 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
 
     val resolveTileHasNonmovingOccupant =
       partiallyResolve { (moversLeft, targetPos, bots) =>
-        val targetTileHasNonmovingOccupant = still.exists(_.position == targetPos)
+        val targetTileHasNonmovingOccupant = still
+          .filter(_.alive)
+          .exists(_.position == targetPos)
         if (targetTileHasNonmovingOccupant) {
-          // collision, can't move in but hit the nonmover. only moving bots deal damage.
+          // collision, can't move in but hit the nonmover. only moving bots
+          // deal damage.
           bots foreach { bot =>
             val enemyOccupants = still
               .filter(
@@ -79,7 +82,8 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
     val resolveCompetingForTile =
       partiallyResolve { (moversLeft, targetPos, bots) =>
         if (bots.size > 1) {
-          // collision, can't move in but hit eachother. only moving bots deal damage.
+          // collision, can't move in but hit eachother. only moving bots deal
+          // damage.
           bots foreach { bot =>
             val others = bots - bot
             others foreach { other =>
@@ -95,7 +99,9 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
     val resolveSingleMover =
       partiallyResolve { (moversLeft, targetPos, bots) =>
         val targetTileHasBotWithAbortedMove =
-          movers.keys.exists(_.position == targetPos)
+          movers.keys
+            .filter(_.alive)
+            .exists(_.position == targetPos)
         if (bots.size == 1 && !targetTileHasBotWithAbortedMove) {
           bots foreach { bot =>
             bot.row = targetPos.row
