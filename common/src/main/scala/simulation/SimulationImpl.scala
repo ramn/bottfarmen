@@ -82,6 +82,6 @@ class SimulationImpl(
       (commander -> commands)
     }.toMap
 
-  protected def gameStateFor(commander: BotCommander): api.GameState =
+  def gameStateFor(commander: BotCommander): api.GameState =
     gameStateApiGateway.forCommander(commander)
 }
