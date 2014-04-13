@@ -9,6 +9,8 @@ import se.ramn.bottfarmen.api
 import se.ramn.bottfarmen.simulation.entity.Bot
 import se.ramn.bottfarmen.simulation.entity.Position
 import se.ramn.bottfarmen.simulation.entity.BotCommander
+import se.ramn.bottfarmen.simulation.entity.Action
+import se.ramn.bottfarmen.simulation.entity.Move
 import se.ramn.bottfarmen.simulation.view.SimulationView
 
 
@@ -28,7 +30,7 @@ class SimulationImpl(
   override def doTurn: Unit = {
     turnNo += 1
 
-    val actionsForTurn = actions
+    val actionsForTurn = actions(extractCommands())
     resolveMoveActions(actionsForTurn)
   }
 
@@ -40,8 +42,9 @@ class SimulationImpl(
     moveResolver.resolve()
   }
 
-  def actions: Seq[Action] = {
-    val commandsByCommander = extractCommands()
+  def actions(
+    commandsByCommander: Map[BotCommander, Seq[api.Command]]
+  ): Seq[Action] = {
     val commanderCommandPairs: Seq[(BotCommander, api.Command)] = for {
       (commander, commands) <- commandsByCommander.toList
       command <- commands
@@ -50,7 +53,20 @@ class SimulationImpl(
       commanderCommandPairs flatMap { case (commander, command) =>
         validateMove(commander)(command)
       }
-    actions
+    filterMaxOneCommandPerBot(actions)
+  }
+
+  def filterMaxOneCommandPerBot(actions: Seq[Action]): Seq[Action] = {
+    val botsWithSingleAction =
+      actions.foldLeft(Map.empty[Bot, Action]) { (memo, action) =>
+        if (memo contains action.bot) {
+          memo
+        } else {
+          memo.updated(action.bot, action)
+        }
+      }
+    // return actions with sort order preserved
+    actions.filter(botsWithSingleAction.values.toSet)
   }
 
   def extractCommands(): Map[BotCommander, Seq[api.Command]] =
