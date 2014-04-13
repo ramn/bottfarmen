@@ -118,11 +118,6 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
       resolveLoneOccupant
 
     val unhandledMovers = pipe(movers)
-
-    unhandledMovers foreach { unhandledMover =>
-      val (bot, pos) = unhandledMover
-      println(s"Could not move bot $bot to $pos")
-    }
     unhandledMovers
   }
 }

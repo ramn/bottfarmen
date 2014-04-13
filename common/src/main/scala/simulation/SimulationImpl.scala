@@ -39,7 +39,11 @@ class SimulationImpl(
     val movers = moveActions.map(move => move.bot -> move.position).toMap
     val stillBots = commanders.flatMap(_.bots) -- movers.keySet
     val moveResolver = new MoveResolver(movers, stillBots, scenario)
-    moveResolver.resolve()
+    val unhandledMovers = moveResolver.resolve()
+    unhandledMovers foreach { unhandledMover =>
+      val (bot, pos) = unhandledMover
+      println(s"Could not move bot $bot to $pos")
+    }
   }
 
   def actions(
