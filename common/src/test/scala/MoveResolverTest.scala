@@ -1,4 +1,5 @@
 import org.scalatest.FunSuite
+import org.scalatest.OneInstancePerTest
 
 import se.ramn.bottfarmen.api
 import se.ramn.bottfarmen.simulation.MoveResolver
@@ -10,62 +11,40 @@ import se.ramn.bottfarmen.simulation.TileMap
 import se.ramn.bottfarmen.simulation.Scenario
 
 
-class MoveResolverTest extends FunSuite {
+class MoveResolverTest extends FunSuite with OneInstancePerTest {
+  val scenario = new Scenario {
+    override val tilemap = TileMap.loadFromFile("common/src/test/assets/testmap.txt")
+  }
+  val commander1 = createCommander(1)
+  val commander2 = createCommander(2)
+
+  def createCommander(id: Int) = {
+    val myId = id
+    new BotCommander {
+      val id = myId
+      val name = s"C$myId"
+      var bots = Set.empty[Bot]
+      def requestCommands(gameState: api.GameState) = ???
+      var homeBase: Base = new Base(800, 10 * myId, 10 * myId)
+    }
+  }
+
+  def createBot(id: Int, commander: BotCommander, row: Int, col: Int): Bot = {
+    val (myRow, myCol) = (row, col)
+    val bot = new Bot(id, commander) {
+      var row = myRow
+      var col = myCol
+      var hitpoints = 100
+    }
+    commander.bots += bot
+    bot
+  }
+
   test("resolve") {
-
-    val scenario = new Scenario {
-      override val tilemap = TileMap.loadFromFile("common/src/test/assets/testmap.txt")
-    }
-
-    val commander1 = new BotCommander {
-      val id = 1
-      val name = "C1"
-      var bots = Set.empty[Bot]
-      def requestCommands(gameState: api.GameState) = ???
-      var homeBase: Base = new Base(800, 99, 99)
-    }
-
-    val commander2 = new BotCommander {
-      val id = 2
-      val name = "C2"
-      var bots = Set.empty[Bot]
-      def requestCommands(gameState: api.GameState) = ???
-      var homeBase: Base = new Base(800, 101, 101)
-    }
-
-
-
-    val bot1 = new Bot(1, commander1) {
-      var row = 1
-      var col = 1
-      var hitpoints = 100
-    }
-    commander1.bots += bot1
-
-    val bot2 = new Bot(2, commander2) {
-      var row = 2
-      var col = 2
-      var hitpoints = 100
-    }
-    commander2.bots += bot2
-
-    val bot3 = new Bot(3, commander1) {
-      var row = 2
-      var col = 1
-      var hitpoints = 100
-    }
-    commander1.bots += bot3
-
-
-    val bot4 = new Bot(4, commander1) {
-      var row = 1
-      var col = 8
-      var hitpoints = 100
-    }
-    commander1.bots += bot4
-
-
-
+    val bot1 = createBot(1, commander1, row=1, col=1)
+    val bot2 = createBot(2, commander2, row=2, col=2)
+    val bot3 = createBot(3, commander1, row=2, col=1)
+    val bot4 = createBot(4, commander1, row=1, col=8)
 
     val target = new MoveResolver(
       Map(
