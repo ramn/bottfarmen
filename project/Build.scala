@@ -24,16 +24,6 @@ object Settings {
     fork in Compile := true
   ) ++ assemblySettings
 
-  //lazy val android = Settings.common ++
-    //AndroidProject.androidSettings ++
-    //AndroidMarketPublish.settings ++ Seq (
-      //platformName in Android := "android-17",
-      //keyalias in Android := "change-me",
-      //mainAssetsPath in Android := file("common/src/main/resources"),
-      //unmanagedBase <<= baseDirectory( _ /"src/main/libs" ),
-      //proguardOption in Android := "-keep class com.badlogic.gdx.backends.android.** { *; }"
-    //)
-
   lazy val updateGdx = taskKey[Unit]("Downloads libgdx")
 
   lazy val updateGdxSetting = updateGdx := {
@@ -95,15 +85,6 @@ object Settings {
       case e: Exception => println(e)
     }
 
-    //s.log.info("Extracting android libs")
-    //val androidDest = file("android/src/main/libs")
-    //val androidFilter = new ExactFilter("gdx-backend-android.jar") |
-    //new ExactFilter("armeabi/libgdx.so") |
-    //new ExactFilter("armeabi/libandroidgl20.so") |
-    //new ExactFilter("armeabi-v7a/libgdx.so") |
-    //new ExactFilter("armeabi-v7a/libandroidgl20.so")
-    //IO.unzip(zipFile, androidDest, androidFilter)
-
     // Destroy the file.
     zipFile.delete
     s.log.info("Update complete")
@@ -123,10 +104,4 @@ object LibgdxBuild extends Build {
     file("desktop"),
     settings = Settings.desktop
   ) dependsOn common
-
-  //lazy val android = Project (
-    //"android",
-    //file("android"),
-    //settings = Settings.android
-  //) dependsOn common
 }
