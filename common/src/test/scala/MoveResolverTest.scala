@@ -79,9 +79,6 @@ class MoveResolverTest extends FunSuite with OneInstancePerTest {
     assert(bot1.hitpoints === 60)
     assert(bot2.hitpoints === 60)
     assert(bot3.hitpoints === 100)
-
-    assert(unhandledMovers.size === 1)
-    assert(unhandledMovers.keys.head === bot3)
   }
 
   test("should move into square where bot died") {
@@ -176,5 +173,31 @@ class MoveResolverTest extends FunSuite with OneInstancePerTest {
     assert(
       Seq(bot1, bot2, bot3, bot4).map(_.col).forall(_ == 0),
       "All bots should still be in column 0")
+  }
+
+  test("bots can swap places, not taking damage") {
+    val bot1 = createBot(1, commander1, row=1, col=1)
+    val bot2 = createBot(2, commander2, row=1, col=2)
+
+    val target = new MoveResolver(
+      Map(
+        bot1 -> Position(row=1, col=2),
+        bot2 -> Position(row=1, col=1)),
+      Set.empty,
+      scenario)
+
+    val unhandledMovers = target.resolve()
+
+    assert(bot1.row === 1)
+    assert(bot1.col === 2)
+
+    assert(bot2.row === 1)
+    assert(bot2.col === 1)
+
+    assert(bot1.hitpoints === 100)
+    assert(bot2.hitpoints === 100)
+
+    assert(commander1.bots === Set(bot1))
+    assert(commander2.bots === Set(bot2))
   }
 }

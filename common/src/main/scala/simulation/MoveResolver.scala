@@ -98,19 +98,19 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
 
     val resolveSingleMover =
       partiallyResolve { (moversLeft, targetPos, bots) =>
+        def isHandled(mover: Bot) = !moversLeft.keySet(mover)
         val targetTileHasBotWithAbortedMove =
           movers.keys
             .filter(_.alive)
+            .filter(isHandled)
             .exists(_.position == targetPos)
         if (bots.size == 1 && !targetTileHasBotWithAbortedMove) {
           bots foreach { bot =>
             bot.row = targetPos.row
             bot.col = targetPos.col
           }
-          moversLeft -- bots
-        } else {
-          moversLeft
         }
+        moversLeft -- bots
       }
 
     val pipe =
