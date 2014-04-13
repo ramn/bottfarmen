@@ -82,7 +82,7 @@ class SimulationImpl(
         val mountain = '^'
         val isWalkable = targetTileOpt.map(_ != mountain).getOrElse(false)
         if (isWithinMap && isWalkable) {
-          Some(Move(bot, Position(row=targetRow, col=targetCol)))
+          Some(Move(bot, targetPos))
         } else {
           None
         }
