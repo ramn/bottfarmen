@@ -17,7 +17,8 @@ object Settings {
     ),
     javacOptions ++= Seq("-Xlint:unchecked"),
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "1.9.1")
+      "org.scalatest" %% "scalatest" % "2.1.3"
+    )
    )
 
   lazy val desktop = Settings.common ++ Seq (
