@@ -51,12 +51,7 @@ trait BaseCommander[Bot <: BaseBot] extends BotCommander {
     }
     val newGameStateBots = gameStateBots.filterNot(b => myBotsById.keySet(b.id))
     val myNewBots = newGameStateBots.map(b => myBotFactory(b))
-    // drop bots that are removed serverside
-    //val myOldBots = myBotsById.values.filter { myBot =>
-      //gameStateBots.map(_.id).toSet(myBot.id)
-    //}
-    //myOldBots.toSet ++ myNewBots.toSet
     // Keep dead bots
-    myBotsById.values.toSet ++ myNewBots.toSet
+    myBots.toSet ++ myNewBots.toSet
   }
 }
