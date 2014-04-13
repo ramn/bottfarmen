@@ -89,7 +89,7 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
         }
       }
 
-    val resolveLoneOccupant =
+    val resolveSingleMover =
       partiallyResolve { (moversLeft, targetPos, bots) =>
         val targetTileHasBotWithAbortedMove =
           movers.keys.exists(_.position == targetPos)
@@ -108,7 +108,7 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
       resolveWater andThen
       resolveTileHasNonmovingOccupant andThen
       resolveCompetingForTile andThen
-      resolveLoneOccupant
+      resolveSingleMover
 
     val unhandledMovers = pipe(movers)
     unhandledMovers
