@@ -35,13 +35,11 @@ class SimulationImpl(
       command <- commands
     } yield {
       command match {
-        case Move(botId, steps) if !steps.isEmpty =>
+        case Move(botId, step) if "nsew".toSet.contains(step) =>
           val botMaybe = commander.bots
             .filter(_.hitpoints > 0)
             .find(_.id == botId)
           val maybeAction = botMaybe flatMap { bot =>
-            // TODO: handle more than one step
-            val step = steps.filter("nsew".toSet).head
             val (targetRow, targetCol) = step match {
               case 'n' => (bot.row - 1) -> bot.col
               case 's' => (bot.row + 1) -> bot.col

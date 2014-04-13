@@ -27,7 +27,7 @@ class DummyBotCommander extends BotCommander {
     val directions = "nwse".toSeq
     def nextRandomDir = directions(util.Random.nextInt(directions.length))
     bots.toList.map { bot =>
-      Move(bot.id, nextRandomDir.toString)
+      Move(bot.id, nextRandomDir)
     }.asInstanceOf[List[Command]].asJava
   }
 

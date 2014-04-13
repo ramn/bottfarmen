@@ -17,7 +17,7 @@ class JavaBotCommander implements BotCommander {
   }
 
   public List<Command> update(GameState gameState) {
-    final Command command = new Move(1, "n");
+    final Command command = new Move(1, 'n');
     return Collections.singletonList(command);
   }
 }
