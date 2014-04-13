@@ -11,11 +11,11 @@ Running game
 
 Start with one dummy BotCommander
 
-    COMMANDERS="se.ramn.bottfarmen.example.DummyBotCommander" ./run
+    COMMANDERS="se.ramn.bottfarmen.example.RandomCommander" ./run
 
 Start with two dummy BotCommanders
 
-    COMMANDERS="se.ramn.bottfarmen.example.DummyBotCommander,se.ramn.bottfarmen.example.DummyBotCommander" ./run
+    COMMANDERS="se.ramn.bottfarmen.example.RandomCommander,se.ramn.bottfarmen.example.RandomCommander" ./run
 
 To set a custom map, provide the path to the map file in the environment:
 
@@ -39,5 +39,5 @@ be present, since it is not included in the jar.
 
 		cd desktop/
 		export MAP_FILE="assets/data/testmap.dev.txt"
-		export COMMANDERS="se.ramn.bottfarmen.example.DummyBotCommander,se.ramn.bottfarmen.example.DummyBotCommander"
+		export COMMANDERS="se.ramn.bottfarmen.example.RandomCommander,se.ramn.bottfarmen.example.RandomCommander"
 		java -jar desktop/target/scala-2.10/desktop-assembly-0.1.jar
