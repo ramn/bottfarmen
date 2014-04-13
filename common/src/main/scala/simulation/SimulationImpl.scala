@@ -9,6 +9,7 @@ import se.ramn.bottfarmen.api
 import se.ramn.bottfarmen.simulation.entity.Bot
 import se.ramn.bottfarmen.simulation.entity.Position
 import se.ramn.bottfarmen.simulation.entity.BotCommander
+import se.ramn.bottfarmen.simulation.entity.Base
 import se.ramn.bottfarmen.simulation.entity.Action
 import se.ramn.bottfarmen.simulation.entity.Move
 import se.ramn.bottfarmen.simulation.entity.Attack
@@ -43,6 +44,14 @@ class SimulationImpl(
           commanders.flatMap(_.bots).filter(_.position == targetPos)
         occupantsAtTargetPos foreach { victim =>
           victim.takeDamage(attacker.attackStrength)
+        }
+        val enemyBaseAtTargetOpt: Option[Base] = commanders
+            .filterNot(_ == attacker.commander)
+            .map(_.homeBase)
+            .filter(_.position == targetPos)
+            .headOption
+        enemyBaseAtTargetOpt foreach { enemyBase =>
+          enemyBase.takeDamage(attacker.attackStrength)
         }
       case _ =>
     }
