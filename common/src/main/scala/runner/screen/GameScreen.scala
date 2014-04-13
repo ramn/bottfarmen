@@ -180,6 +180,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     simulation.botCommanders foreach { commander =>
       drawtextln(commander.name)
       drawtextln(s"Commander id: ${commander.id}")
+      drawtextln(s"Home base hp: ${commander.homeBase.hitpoints}")
       commander.bots foreach { bot =>
         drawtextln(s"Bot id: ${bot.id}")
         drawtextln(s"Bot hitpoints: ${bot.hitpoints}")

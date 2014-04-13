@@ -11,10 +11,16 @@ class SimulationView(commanders: Set[BotCommander]) {
   def bots = commanders flatMap botViewsForCommander
 
   protected def commanderView(commander: BotCommander): BotCommanderView = {
+    val base = commander.homeBase
     new BotCommanderView {
       val id = commander.id
       val name = commander.name
       val bots = botViewsForCommander(commander)
+      val homeBase = new BaseView {
+        override val hitpoints = base.hitpoints
+        override val row = base.row
+        override val col = base.col
+      }
     }
   }
 
