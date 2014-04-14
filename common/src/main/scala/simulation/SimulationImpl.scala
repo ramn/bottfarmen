@@ -24,17 +24,36 @@ class SimulationImpl(
   lazy val gameStateApiGateway = new GameStateApiGateway(commanders, scenario)
 
   var turnNo = 0
+  var isGameOver = false
+  var victor: Option[BotCommander] = None
 
   override def botCommanders = view.botCommanders
 
   override def bots = view.bots
 
   override def doTurn: Unit = {
-    turnNo += 1
+    if (!isGameOver) {
+      turnNo += 1
 
-    val actionsForTurn = actions(extractCommands())
-    resolveAttackActions(actionsForTurn)
-    resolveMoveActions(actionsForTurn)
+      val actionsForTurn = actions(extractCommands())
+      resolveAttackActions(actionsForTurn)
+      resolveMoveActions(actionsForTurn)
+      checkForVictory()
+    } else {
+      println("Game is already over, no more turn will be processed")
+    }
+  }
+
+  def checkForVictory() = {
+    val withBaseStillStanding = commanders.filter(_.homeBase.isAlive)
+    val hasLastManStanding = withBaseStillStanding.size == 1
+    val allBasesAreRazed = withBaseStillStanding.size == 0
+    if (hasLastManStanding || allBasesAreRazed) {
+      isGameOver = true
+      if (hasLastManStanding) {
+        victor = withBaseStillStanding.headOption
+      }
+    }
   }
 
   def resolveAttackActions(actions: Seq[Action]) = {

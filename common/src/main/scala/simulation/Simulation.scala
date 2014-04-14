@@ -15,6 +15,8 @@ trait Simulation {
   def botCommanders: Iterable[BotCommanderView]
   def bots: Iterable[BotView]
   def turnNo: Int
+  def isGameOver: Boolean
+  def victor: Option[BotCommander]
 }
 
 

@@ -11,4 +11,6 @@ class Base(
   def takeDamage(damage: Int): Unit = {
     hitpoints -= damage
   }
+
+  def isAlive: Boolean = hitpoints > 0
 }

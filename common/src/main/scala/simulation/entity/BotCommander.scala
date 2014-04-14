@@ -35,4 +35,7 @@ class BotCommanderImpl(
   override def requestCommands(gameState: api.GameState) = {
     playerCommander.update(gameState).asScala.toIndexedSeq
   }
+  override def toString: String = {
+    s"BotCommander($id, $name)"
+  }
 }

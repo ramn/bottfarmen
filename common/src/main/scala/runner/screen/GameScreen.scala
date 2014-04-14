@@ -65,7 +65,11 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     camera.update() // update camera matrices
     processInput(delta)
     turnsToPerform(delta).timesDo {
-      simulation.doTurn
+      if (simulation.isGameOver) {
+        game.setScreen(new GameOverScreen(game, simulation))
+      } else {
+        simulation.doTurn
+      }
     }
   }
 
