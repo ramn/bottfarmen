@@ -10,14 +10,15 @@ import se.ramn.bottfarmen.api.Command
 import se.ramn.bottfarmen.api.Move
 
 
-class Bot(var underlying: api.Bot) extends BaseBot {
+class RandomCommanderBot(var underlying: api.Bot) extends BaseBot {
   def isAlive = underlying.hitpoints > 0
 }
 
-class RandomCommander extends BaseCommander[Bot] {
+class RandomCommander extends BaseCommander[RandomCommanderBot] {
   val name = "RandomCommander"
 
-  override def makeBot(serverSideBot: api.Bot) = new Bot(serverSideBot)
+  override def makeBot(serverSideBot: api.Bot) =
+    new RandomCommanderBot(serverSideBot)
 
   override def selectCommands(gameState: GameState): Seq[Command] = {
     val livingBots = bots.filter(_.isAlive)
