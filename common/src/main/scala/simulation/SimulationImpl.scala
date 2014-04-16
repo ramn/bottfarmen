@@ -63,7 +63,9 @@ class SimulationImpl(
           (attacker.position.neighbours + attacker.position)(targetPos)
         if (targetIsWithinRange) {
           val occupantsAtTargetPos =
-            commanders.flatMap(_.bots).filter(_.position == targetPos)
+            commanders.flatMap(_.bots)
+              .filter(_.position == targetPos)
+              .filterNot(_ == attacker)
           occupantsAtTargetPos foreach { victim =>
             victim.takeDamage(attacker.attackStrength)
           }
