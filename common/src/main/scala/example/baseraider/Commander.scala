@@ -19,10 +19,8 @@ class Commander extends BaseCommander[Bot] {
 
   override def selectCommands(gameState: GameState): Seq[Command] = {
     val livingBots = bots.filter(_.isAlive)
-    val directions = "nwse".toSeq
-    def nextRandomDir = directions(util.Random.nextInt(directions.length))
     livingBots.toList.map { bot =>
-      Move(bot.id, nextRandomDir)
+      bot.issueCommand(gameState)
     }
   }
 }
