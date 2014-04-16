@@ -34,7 +34,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   private lazy val simulation = buildSimulation
   private lazy val camera = buildCamera
   private val shapeRenderer = new ShapeRenderer
-  private val turnIntervalSecs = 1f
+  private val turnIntervalSecs = 0.5f
   private lazy val terrainTexture =
     new Texture(Gdx.files.internal("assets/data/terrainsprites.png"))
   private lazy val objectTexture =
