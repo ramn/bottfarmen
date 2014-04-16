@@ -31,14 +31,18 @@ class Bot(var underlying: api.Bot) extends BaseBot {
         val (row, col) = (position.row, position.col)
         rowCount >= row && row >= 0 && colCount >= col && col >= 0
       }
-      def tile(position: Position): Char = {
-        terrainGrid(position.row)(position.col)
+      def tile(position: Position): Option[Char] = {
+        if (isWithinMap(position))
+          Some(terrainGrid(position.row)(position.col))
+        else
+          None
+      }
+      def isWalkable(position: Position): Boolean = {
+        val nonWalkable = Set('~')
+        tile(position).filterNot(nonWalkable).isDefined
       }
     }
-    val walkableNeighbours = position.neighbours
-      .filter(Terrain.isWithinMap)
-      .filter(pos => Terrain.tile(pos) != '~')
-
+    val walkableNeighbours = position.neighbours.filter(Terrain.isWalkable)
     val directions = "nwse".toSeq
     def nextRandomDir = directions(util.Random.nextInt(directions.length))
     Move(id, nextRandomDir)
