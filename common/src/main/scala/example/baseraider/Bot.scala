@@ -25,15 +25,22 @@ class Bot(var underlying: api.Bot) extends BaseBot {
       val pathToEnemyBase = findPathToEnemyBase(terrain)
       taskStack +:= FollowPath(pathToEnemyBase)
     }
-    taskStack match {
+
+    val commandFromTaskStack = taskStack match {
       case FollowPath(nextStep :: stepTail) :: taskTail =>
         taskStack = FollowPath(stepTail) :: taskTail
         val moveCommand = Move(id, neighbourToDirection(nextStep))
         Some(moveCommand)
       case FollowPath(Nil) :: taskTail =>
         taskStack = taskTail
+        None
+      case _ => None
+    }
+    commandFromTaskStack orElse {
+      if (position == terrain.enemyBasePos)
+        Some(api.Attack(id, row=row, col=col))
+      else
         pickRandomMove(terrain)
-      case _ => pickRandomMove(terrain)
     }
   }
 
