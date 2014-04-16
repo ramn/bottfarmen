@@ -47,7 +47,10 @@ class Bot(var underlying: api.Bot) extends BaseBot {
 
   def findPathToEnemyBase(terrain: Terrain) = {
     println(s"Will try to find path from $position to ${terrain.enemyBasePos}")
+    val start = System.currentTimeMillis
     val pathToEnemyBase = terrain.findPath(position, terrain.enemyBasePos)
+    val duraionMs = (System.currentTimeMillis - start)
+    println(s"Took $duraionMs ms to pathfind enemy base")
     //pathToEnemyBase foreach println
     pathToEnemyBase
   }
