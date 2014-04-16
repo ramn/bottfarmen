@@ -46,11 +46,11 @@ class Terrain(gameState: GameState) {
     val graph = new Graph[Node] {
       def neighbours(node: Node): Set[Node] = node.neighbours.filter(isWalkable)
       def costFor(node: Node): Cost = 1
-      def nodes: Set[Node] = allPositions.filter(isWalkable)
+      val nodes: Set[Node] = allPositions.filter(isWalkable)
       def heuristicCostToGoalFrom(node: Node): Cost = {
         math.abs(target.col - node.col) + math.abs(target.row - node.row)
       }
-      def maxCost: Cost = Int.MaxValue
+      val maxCost: Cost = Int.MaxValue
       def isGoal(node: Node): Boolean = node == target
     }
     val pathfinder = Pathfinder(source, graph)
