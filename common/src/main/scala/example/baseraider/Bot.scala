@@ -25,13 +25,9 @@ class Bot(var underlying: api.Bot) extends BaseBot {
   }
 
   def neighbourToDirection(position: Position): Char = {
-    if (position.row < row)
-      'n'
-    else if (position.row > row)
-      's'
-    else if (position.col < col)
-      'w'
-    else
-      'e'
+    if (position.row < row) 'n'
+    else if (position.row > row) 's'
+    else if (position.col < col) 'w'
+    else 'e'
   }
 }
