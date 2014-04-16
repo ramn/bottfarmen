@@ -19,8 +19,8 @@ class Commander extends BaseCommander[Bot] {
 
   override def selectCommands(gameState: GameState): Seq[Command] = {
     val livingBots = bots.filter(_.isAlive)
-    livingBots.toList.map { bot =>
-      bot.issueCommand(gameState)
+    livingBots.toList.flatMap { bot =>
+      bot.selectCommand(gameState)
     }
   }
 }
