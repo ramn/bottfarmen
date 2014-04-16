@@ -27,5 +27,3 @@ class Terrain(gameState: GameState) {
     tile(position).filterNot(nonWalkable).isDefined
   }
 }
-
-
