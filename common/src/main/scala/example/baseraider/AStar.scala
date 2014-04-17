@@ -68,7 +68,7 @@ class AStar[Node](start: Node, graph: Graph[Node]) extends Pathfinder[Node] {
         }
         val updatedDistances =
           calcUpdatedDistances(current, openNeighbours, distances)
-        val updatedClosed = closed - current
+        val updatedClosed = closed + current
         calcDistances(updatedOpen, updatedClosed, updatedDistances)
       }
     }
