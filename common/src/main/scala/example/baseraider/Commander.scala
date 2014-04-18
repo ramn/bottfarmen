@@ -12,7 +12,7 @@ import se.ramn.bottfarmen.example.BaseBot
 import se.ramn.bottfarmen.example.BaseCommander
 
 
-class Commander extends BaseCommander[Bot] {
+class BaseRaiderCommander extends BaseCommander[Bot] {
   val name = "BaseRaider"
 
   override def makeBot(serverSideBot: api.Bot) = new Bot(serverSideBot)
