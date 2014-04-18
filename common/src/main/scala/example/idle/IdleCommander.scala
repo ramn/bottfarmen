@@ -15,7 +15,7 @@ import se.ramn.bottfarmen.example.BaseBot
 class Bot(var underlying: api.Bot) extends BaseBot
 
 
-class BaseDefenderCommander extends BaseCommander[Bot] {
+class IdleCommander extends BaseCommander[Bot] {
   val name = "Idle"
 
   override def makeBot(serverSideBot: api.Bot) = new Bot(serverSideBot)
