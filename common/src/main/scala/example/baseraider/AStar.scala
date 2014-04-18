@@ -81,10 +81,10 @@ class AStar[Node](start: Node, graph: Graph[Node]) extends Pathfinder[Node] {
     openNeighbours: Set[Node],
     distances: Map[Node, Int]
   ) = {
-    openNeighbours.foldLeft(distances) { (distances, node) =>
-      val newDistance = distances(current) + graph.costFor(current)
-      if (distances(node) > newDistance) {
-        distances.updated(node, newDistance)
+    openNeighbours.foldLeft(distances) { (distances, neighbour) =>
+      val newDistance = distances(current) + graph.costFor(neighbour)
+      if (distances(neighbour) > newDistance) {
+        distances.updated(neighbour, newDistance)
       } else {
         distances
       }
