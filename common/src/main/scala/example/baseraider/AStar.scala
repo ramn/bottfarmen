@@ -62,7 +62,9 @@ class AStar[Node](start: Node, graph: Graph[Node]) extends Pathfinder[Node] {
       if (graph.isGoal(current)) {
         (distances, Some(current))
       } else {
-        val openNeighbours = graph.neighbours(current) filterNot closed
+        val openNeighbours = graph.neighbours(current)
+          .filterNot(closed)
+          .filterNot(openRest.contains)
         val updatedOpen = openNeighbours.foldLeft(openRest) { (open, node) =>
           open.enqueue(node)
         }
