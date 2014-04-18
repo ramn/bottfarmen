@@ -74,8 +74,11 @@ class SimulationImpl(
               .map(_.homeBase)
               .filter(_.position == targetPos)
               .headOption
-          enemyBaseAtTargetOpt foreach { enemyBase =>
-            enemyBase.takeDamage(attacker.attackStrength)
+          // Only hit enemy base if no defender stands on it
+          if (occupantsAtTargetPos.isEmpty) {
+            enemyBaseAtTargetOpt foreach { enemyBase =>
+              enemyBase.takeDamage(attacker.attackStrength)
+            }
           }
         }
       case _ =>
