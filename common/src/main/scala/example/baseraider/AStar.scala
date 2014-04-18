@@ -56,7 +56,9 @@ class AStar[Node](start: Node, graph: Graph[Node]) extends Pathfinder[Node] {
       (distances, None)
     } else {
       def dequeueNodeClosestByHeuristic = {
-        open.sortBy(graph.heuristicCostToGoalFrom).dequeue
+        def sortKey(node: Node) =
+          (distances(node), graph.heuristicCostToGoalFrom(node))
+        open.sortBy(sortKey).dequeue
       }
       val (current, openRest) = dequeueNodeClosestByHeuristic
       if (graph.isGoal(current)) {
