@@ -30,33 +30,34 @@ class Bot(var underlying: api.Bot) extends BaseBot {
       }
     }
 
-    val commandFromTaskStack = taskStack match {
-      case FollowPath(steps, expectedPos) :: taskTail =>
-        if (expectedPos == position) {
-          steps match {
-            case nextStep :: stepTail =>
-              taskStack = FollowPath(stepTail, nextStep) :: taskTail
-              val moveCommand = Move(id, neighbourToDirection(nextStep))
-              Some(moveCommand)
-            case Nil =>
-              taskStack = taskTail
-              None
-          }
-        } else if (position.neighbours(expectedPos)) {
-          val moveCommand = Move(id, neighbourToDirection(expectedPos))
-          Some(moveCommand)
-        } else {
-          taskStack = taskTail
-          None
-        }
-      case _ => None
-    }
-    commandFromTaskStack orElse {
+    commandOptFromTaskStack orElse {
       if (position == terrain.enemyBasePos)
         Some(api.Attack(id, row=row, col=col))
       else
         pickRandomMove(terrain)
     }
+  }
+
+  def commandOptFromTaskStack: Option[Command] = taskStack match {
+    case FollowPath(steps, expectedPos) :: taskTail =>
+      if (expectedPos == position) {
+        steps match {
+          case nextStep :: stepTail =>
+            taskStack = FollowPath(stepTail, nextStep) :: taskTail
+            val moveCommand = Move(id, neighbourToDirection(nextStep))
+            Some(moveCommand)
+          case Nil =>
+            taskStack = taskTail
+            None
+        }
+      } else if (position.neighbours(expectedPos)) {
+        val moveCommand = Move(id, neighbourToDirection(expectedPos))
+        Some(moveCommand)
+      } else {
+        taskStack = taskTail
+        None
+      }
+    case _ => None
   }
 
   def pickRandomMove(terrain: Terrain): Option[Move] = {
