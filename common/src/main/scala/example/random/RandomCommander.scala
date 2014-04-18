@@ -1,4 +1,4 @@
-package se.ramn.bottfarmen.example
+package se.ramn.bottfarmen.example.random
 
 import collection.JavaConverters._
 import collection.immutable.Seq
@@ -8,6 +8,8 @@ import se.ramn.bottfarmen.api.GameState
 import se.ramn.bottfarmen.api
 import se.ramn.bottfarmen.api.Command
 import se.ramn.bottfarmen.api.Move
+import se.ramn.bottfarmen.example.BaseCommander
+import se.ramn.bottfarmen.example.BaseBot
 
 
 class RandomCommanderBot(var underlying: api.Bot) extends BaseBot {
