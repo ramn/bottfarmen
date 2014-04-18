@@ -11,7 +11,9 @@ import se.ramn.bottfarmen.example.BaseBot
 
 
 sealed trait Task
-case class FollowPath(remainingPath: Seq[Position]) extends Task
+case class FollowPath(
+  remainingPath: Seq[Position],
+  expectedPos: Position) extends Task
 
 
 class Bot(var underlying: api.Bot) extends BaseBot {
@@ -23,17 +25,30 @@ class Bot(var underlying: api.Bot) extends BaseBot {
     val terrain = new Terrain(gameState)
     if (gameState.turn == 1) {
       val pathToEnemyBase = findPathToEnemyBase(terrain)
-      taskStack +:= FollowPath(pathToEnemyBase)
+      if (!pathToEnemyBase.isEmpty) {
+        taskStack +:= FollowPath(pathToEnemyBase, position)
+      }
     }
 
     val commandFromTaskStack = taskStack match {
-      case FollowPath(nextStep :: stepTail) :: taskTail =>
-        taskStack = FollowPath(stepTail) :: taskTail
-        val moveCommand = Move(id, neighbourToDirection(nextStep))
-        Some(moveCommand)
-      case FollowPath(Nil) :: taskTail =>
-        taskStack = taskTail
-        None
+      case FollowPath(steps, expectedPos) :: taskTail =>
+        if (expectedPos == position) {
+          steps match {
+            case nextStep :: stepTail =>
+              taskStack = FollowPath(stepTail, nextStep) :: taskTail
+              val moveCommand = Move(id, neighbourToDirection(nextStep))
+              Some(moveCommand)
+            case Nil =>
+              taskStack = taskTail
+              None
+          }
+        } else if (position.neighbours(expectedPos)) {
+          val moveCommand = Move(id, neighbourToDirection(expectedPos))
+          Some(moveCommand)
+        } else {
+          taskStack = taskTail
+          None
+        }
       case _ => None
     }
     commandFromTaskStack orElse {
