@@ -17,7 +17,7 @@ class RandomCommanderBot(var underlying: api.Bot) extends BaseBot {
 }
 
 class RandomCommander extends BaseCommander[RandomCommanderBot] {
-  val name = "RandomCommander"
+  val name = "Random"
 
   override def makeBot(serverSideBot: api.Bot) =
     new RandomCommanderBot(serverSideBot)
