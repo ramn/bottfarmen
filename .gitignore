@@ -5,4 +5,4 @@ target
 .idea
 .idea_modules
 tags
-desktop/assets/data/testmap.dev.txt
+desktop/src/main/resources/assets/data/testmap.dev.txt
