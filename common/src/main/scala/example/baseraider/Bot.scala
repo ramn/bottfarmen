@@ -8,6 +8,7 @@ import se.ramn.bottfarmen.api.GameState
 import se.ramn.bottfarmen.api.Command
 import se.ramn.bottfarmen.api.Move
 import se.ramn.bottfarmen.example.BaseBot
+import se.ramn.bottfarmen.util.Logging
 
 
 sealed trait Task
@@ -16,7 +17,7 @@ case class FollowPath(
   expectedPos: Position) extends Task
 
 
-class Bot(var underlying: api.Bot) extends BaseBot {
+class Bot(var underlying: api.Bot) extends BaseBot with Logging {
   var taskStack = List.empty[Task]
   def isAlive = underlying.hitpoints > 0
   def position = Position(row=row, col=col)
@@ -69,12 +70,11 @@ class Bot(var underlying: api.Bot) extends BaseBot {
   }
 
   def findPathToEnemyBase(terrain: Terrain) = {
-    println(s"Will try to find path from $position to ${terrain.enemyBasePos}")
-    val start = System.currentTimeMillis
+    logger.debug(s"Will try to find path from $position to ${terrain.enemyBasePos}")
+    val start = System.nanoTime
     val pathToEnemyBase = terrain.findPath(position, terrain.enemyBasePos)
-    val duraionMs = (System.currentTimeMillis - start)
-    println(s"Took $duraionMs ms to pathfind enemy base")
-    //pathToEnemyBase foreach println
+    val duraionMs = (System.nanoTime - start) / 1E6
+    logger.debug(s"Took $duraionMs ms to pathfind enemy base")
     pathToEnemyBase
   }
 

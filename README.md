@@ -1,6 +1,8 @@
 Install
 ============
 
+Requirements: java sdk 7, sbt
+
     sbt updateGdx
 
 
@@ -15,9 +17,18 @@ To set a custom map, provide the path to the map file in the environment:
 
 		MAP_FILE="assets/data/testmap.txt"
 
+To change log level (default is Info), set the environment variable:
+
+    LOG_LEVEL=Debug
+
+Available logging levels: Trace, Debug, Info, Warning, Error, Fatal
+
+
+Standalone jar
+==============
 
 Build standalone jar
-====================
+--------------------
 A standalone jar, including every dependency and even scala itself, can be
 built thus:
 
@@ -27,7 +38,7 @@ It can be run with only java present. Note, it won't include the assets director
 
 
 Run standalone jar
-==================
+------------------
 We cd into desktop/ project, since the assets dir lives there and it needs to
 be present, since it is not included in the jar.
 

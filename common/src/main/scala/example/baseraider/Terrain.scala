@@ -4,9 +4,10 @@ import collection.immutable.Seq
 import collection.immutable.Queue
 
 import se.ramn.bottfarmen.api.GameState
+import se.ramn.bottfarmen.util.Logging
 
 
-class Terrain(gameState: GameState) {
+class Terrain(gameState: GameState) extends Logging {
   val rowCount = gameState.rowCount
   val colCount = gameState.colCount
   lazy val terrainGrid = gameState.terrain.split("\n").toIndexedSeq
@@ -42,6 +43,7 @@ class Terrain(gameState: GameState) {
 
   def findPath(source: Position, target: Position): Seq[Position] = {
     require(isWithinMap(target))
+    val start = System.nanoTime
     type Node = Position
     val graph = new Graph[Node] {
       def neighbours(node: Node): Set[Node] = node.neighbours.filter(isWalkable)
@@ -53,7 +55,13 @@ class Terrain(gameState: GameState) {
       val maxCost: Cost = Int.MaxValue
       def isGoal(node: Node): Boolean = node == target
     }
+    val buildingGraphMs = (System.nanoTime - start) / 1E6
     val pathfinder = Pathfinder(source, graph)
-    pathfinder.path
+    val buildingPathfinderMs = (System.nanoTime - start) / 1E6
+    val path = pathfinder.path
+    val findingPathMs = (System.nanoTime - start) / 1E6
+    logger.debug("buildingGraphMs: %s, buildingPathfinderMs: %s, findingPathMs: %s".format(
+      buildingGraphMs, buildingPathfinderMs, findingPathMs))
+    path
   }
 }
