@@ -23,7 +23,7 @@ class Bot(var underlying: api.Bot) extends BaseBot with Logging {
   def position = Position(row=row, col=col)
 
   def selectCommand(gameState: GameState): Option[Command] = {
-    val terrain = new Terrain(gameState)
+    lazy val terrain = new Terrain(gameState)
     if (gameState.turn == 1) {
       val pathToEnemyBase = findPathToEnemyBase(terrain)
       if (!pathToEnemyBase.isEmpty) {
