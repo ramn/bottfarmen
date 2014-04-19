@@ -40,6 +40,7 @@ It can be run with only java present.
 Run standalone jar
 ------------------
 
-		export MAP_FILE="assets/data/testmap.dev.txt"
+    #export LOG_LEVEL=Debug # optional
+    #export MAP_FILE="assets/data/testmap.dev.txt" # optional
     export COMMANDERS="se.ramn.bottfarmen.example.baseraider.BaseRaiderCommander,se.ramn.bottfarmen.example.idle.IdleCommander"
 		java -jar desktop/target/scala-2.10/desktop-assembly-0.1.jar
