@@ -13,9 +13,12 @@ Start with two example bot commanders:
 
     COMMANDERS="se.ramn.bottfarmen.example.baseraider.BaseRaiderCommander,se.ramn.bottfarmen.example.idle.IdleCommander" ./run
 
-To set a custom map, provide the path to the map file in the environment:
+To set a custom map, provide the path to the map file in the environment. The
+path should be absolute, where the root is the resources/ directory. The path
+should therefore start with a slash.
+Example:
 
-		MAP_FILE="assets/data/testmap.txt"
+		MAP_FILE="/assets/data/testmap.txt"
 
 To change log level (default is Info), set the environment variable:
 
