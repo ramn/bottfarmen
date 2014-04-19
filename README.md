@@ -9,7 +9,7 @@ Requirements: java sdk 7, sbt
 Running game
 ============
 
-Start with two example bot commanders:
+Start with two example bot commanders (must be on class path):
 
     COMMANDERS="se.ramn.bottfarmen.example.baseraider.BaseRaiderCommander,se.ramn.bottfarmen.example.idle.IdleCommander" ./run
 
