@@ -8,7 +8,7 @@ import AssemblyKeys._
 object Settings {
   lazy val common = Project.defaultSettings ++ Seq(
     version := "0.1",
-    scalaVersion := "2.10.3",
+    scalaVersion := "2.10.4",
     scalacOptions ++= Seq(
       "-feature",
       "-unchecked",
