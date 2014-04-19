@@ -10,4 +10,8 @@ package object util {
       }
     }
   }
+
+  def loadTextFileFromClassPath(path: String): String = {
+    io.Source.fromInputStream(getClass.getResourceAsStream(path)).mkString
+  }
 }

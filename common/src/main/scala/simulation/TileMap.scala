@@ -3,6 +3,7 @@ package se.ramn.bottfarmen.simulation
 import collection.immutable.IndexedSeq
 import TileMap.Tile
 import se.ramn.bottfarmen.simulation.entity.Position
+import se.ramn.bottfarmen.util.loadTextFileFromClassPath
 
 
 trait TileMap {
@@ -21,13 +22,17 @@ case class StartingPosition(id: Int, row: Int, col: Int)
 object TileMap {
   type Tile = Char
 
-  def loadFromFile(path: String): TileMap = {
-    parse(io.Source.fromFile(path).mkString)
+  def loadFromClassPath(path: String): TileMap = {
+    parse(loadTextFileFromClassPath(path))
   }
 
   def fromEnvOrDefault(defaultMapPath: String) = {
     val mapPath = sys.env.getOrElse("MAP_FILE", defaultMapPath)
-    loadFromFile(mapPath)
+    val absoluteJarPath =
+      if (mapPath.startsWith("/")) mapPath
+      else "/" + mapPath
+
+    loadFromClassPath(absoluteJarPath)
   }
 
   /*

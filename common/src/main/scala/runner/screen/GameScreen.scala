@@ -42,7 +42,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   private lazy val terrainSprites = buildTerrainSprites
   private lazy val objectSprites = buildObjectSprites
   private lazy val map = TileMap.fromEnvOrDefault(
-    defaultMapPath="assets/data/testmap.txt")
+    defaultMapPath="/assets/data/testmap.txt")
   private object propertiesHud {
     val leftOffset = 1050
     val leftBorderOffset = leftOffset - 50

@@ -1,1 +1,19 @@
-sbt "project desktop" "run"
+#!/bin/bash
+
+
+# Config
+#export MAP_FILE="assets/data/testmap.txt"
+#export COMMANDERS="se.ramn.bottfarmen.example.baseraider.BaseRaiderCommander,se.ramn.bottfarmen.example.idle.IdleCommander"
+#export LOG_LEVEL=Debug
+
+
+function run_with_sbt() {
+  exec sbt "project desktop" "run"
+}
+
+function build_and_run_jar() {
+  sbt assembly
+  exec java -jar desktop/target/scala-2.10/desktop-assembly-0.1.jar
+}
+
+build_and_run_jar

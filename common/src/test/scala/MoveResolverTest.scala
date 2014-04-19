@@ -13,7 +13,7 @@ import se.ramn.bottfarmen.simulation.Scenario
 
 class MoveResolverTest extends FunSuite with OneInstancePerTest {
   val scenario = new Scenario {
-    override val tilemap = TileMap.loadFromFile("common/src/test/assets/testmap.txt")
+    override val tilemap = TileMap.loadFromClassPath("/testmap.txt")
   }
   val commander1 = createCommander(1)
   val commander2 = createCommander(2)
