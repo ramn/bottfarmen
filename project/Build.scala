@@ -19,7 +19,7 @@ object Settings {
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "2.1.3"
     )
-   )
+  )
 
   lazy val desktop = Settings.common ++ Seq (
     fork in Compile := true
