@@ -31,7 +31,7 @@ import se.ramn.bottfarmen.util.Times
 
 class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   val tilesize = 16
-  private lazy val simulation = buildSimulation
+  private lazy val simulation: Simulation = buildSimulation
   private lazy val camera = buildCamera
   private val shapeRenderer = new ShapeRenderer
   private val turnIntervalSecs = 0.5f
