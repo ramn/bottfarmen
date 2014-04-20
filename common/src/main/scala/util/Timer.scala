@@ -6,7 +6,7 @@ object Timer extends Logging {
     val start = System.nanoTime
     val result = thunk
     val duration = (System.nanoTime - start) / 1E6
-    logger.info(s"$message, duration: $duration ms")
+    logger.debug(s"$message, duration: $duration ms")
     result
   }
 }
