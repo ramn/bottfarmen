@@ -9,6 +9,7 @@ import se.ramn.bottfarmen.api.Command
 import se.ramn.bottfarmen.api.Move
 import se.ramn.bottfarmen.example.BaseBot
 import se.ramn.bottfarmen.util.Logging
+import se.ramn.bottfarmen.util.Timer.time
 
 
 sealed trait Task
@@ -76,10 +77,9 @@ class Bot(var underlying: api.Bot) extends BaseBot with Logging {
 
   def findPathToEnemyBase(terrain: Terrain) = {
     logger.debug(s"Will try to find path from $position to ${terrain.enemyBasePos}")
-    val start = System.nanoTime
-    val pathToEnemyBase = terrain.findPath(position, terrain.enemyBasePos)
-    val duraionMs = (System.nanoTime - start) / 1E6
-    logger.debug(s"Took $duraionMs ms to pathfind enemy base")
+    val pathToEnemyBase = time(
+      "pathfinding enemy base",
+      terrain.findPath(position, terrain.enemyBasePos))
     pathToEnemyBase
   }
 
