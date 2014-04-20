@@ -25,7 +25,7 @@ class FoodSpawner(scenario: Scenario) {
   def update(tilemap: TileMap, turnNo: Int) {
     val shouldSpawn = turnNo % spawnIntervalTurns == 1
     val foodsToSpawn =
-      (foodMaxCount - mySpawnedFood.size) % foodMaxCount
+      (foodMaxCount - mySpawnedFood.size) % (foodMaxCount + 1)
     if (shouldSpawn && foodsToSpawn > 0) {
       val positionIterator = Iterator.continually(
         Position(
