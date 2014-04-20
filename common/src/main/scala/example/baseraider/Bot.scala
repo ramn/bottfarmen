@@ -24,16 +24,15 @@ class Bot(var underlying: api.Bot) extends BaseBot with Logging {
 
   def isAlive = underlying.hitpoints > 0
 
-  def foodInSight: Set[Position] =
-    underlying.foodInSight.asScala.toSet[api.Food]
-      .map { food => Position(row=food.row, col=food.col) }
+  def foodPositions: Set[Position] =
+    foodInSight.map { food => Position(row=food.row, col=food.col) }
 
   def position = Position(row=row, col=col)
 
   def selectCommand(gameState: GameState): Option[Command] = {
     val terrain = new Terrain(gameState)
-    if (!foodInSight.isEmpty) {
-      logger.info(s"I see food at: ${foodInSight.mkString(", ")}")
+    if (!foodPositions.isEmpty) {
+      logger.info(s"I see food at: ${foodPositions.mkString(", ")}")
     }
     issueTasks(gameState, terrain)
     commandOptFromTaskStack orElse defaultCommandOpt(terrain)

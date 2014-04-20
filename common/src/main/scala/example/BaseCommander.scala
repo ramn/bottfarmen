@@ -19,6 +19,7 @@ trait BaseBot {
   def col: Int = underlying.col
   def hitpoints: Int = underlying.hitpoints
   def enemiesInSight: Set[EnemyBot] = underlying.enemiesInSight.asScala.toSet
+  def foodInSight: Set[api.Food] = underlying.foodInSight.asScala.toSet[api.Food]
 }
 
 
