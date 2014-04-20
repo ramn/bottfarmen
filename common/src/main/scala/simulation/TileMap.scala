@@ -20,6 +20,16 @@ trait TileMap {
 case class StartingPosition(id: Int, row: Int, col: Int)
 
 
+object Tiles {
+  val Land = '.'
+  val Water = '~'
+  val Food = 'f'
+  val Mountain = '^'
+  val HomeCommander0 = '0'
+  val HomeCommander1 = '1'
+}
+
+
 object TileMap {
   type Tile = Char
 
@@ -88,7 +98,7 @@ object TileMap {
         }
       }
       override def isWalkable(position: Position): Boolean = {
-        val nonWalkable = Set('~')
+        val nonWalkable = Set(Tiles.Water)
         tile(position).filterNot(nonWalkable).isDefined
       }
     }
