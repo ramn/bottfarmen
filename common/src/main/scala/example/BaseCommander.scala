@@ -9,6 +9,7 @@ import se.ramn.bottfarmen.api.EnemyBot
 import se.ramn.bottfarmen.api.GameState
 import se.ramn.bottfarmen.api.Command
 import se.ramn.bottfarmen.api.Move
+import se.ramn.bottfarmen.api.Food
 
 
 trait BaseBot {
@@ -19,7 +20,7 @@ trait BaseBot {
   def col: Int = underlying.col
   def hitpoints: Int = underlying.hitpoints
   def enemiesInSight: Set[EnemyBot] = underlying.enemiesInSight.asScala.toSet
-  def foodInSight: Set[api.Food] = underlying.foodInSight.asScala.toSet[api.Food]
+  def foodInSight: Set[Food] = underlying.foodInSight.asScala.toSet[Food]
 }
 
 
