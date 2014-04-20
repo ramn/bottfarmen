@@ -23,7 +23,7 @@ class SimulationImpl(
 ) extends Simulation {
   lazy val view = new SimulationView(commanders)
   lazy val gameStateApiGateway = new GameStateApiGateway(commanders, scenario)
-  val foodSpawner = new FoodSpawner
+  val foodSpawner = new FoodSpawner(scenario)
 
   var turnNo = 0
   var isGameOver = false
@@ -57,7 +57,8 @@ class SimulationImpl(
       val commander = foodGrabbingBot.commander
       val homeBasePos = commander.homeBase.position
       val homeBaseOccupied = allLivingBots.exists(_.position == homeBasePos)
-      if (!homeBaseOccupied) {
+      if (!homeBaseOccupied &&
+        commander.bots.size < scenario.maxBotCountPerCommander) {
         foodSpawner.consumeFood(foodGrabbingBot.position)
         commander.spawnBot(homeBasePos)
       }

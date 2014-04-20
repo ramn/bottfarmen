@@ -213,6 +213,10 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     val commanders = BotCommanderLoader.loadFromEnv
     val scenario = new Scenario {
       override val tilemap = self.map
+      override val maxFoodTilesCount =
+        5 + ((tilemap.rowCount * tilemap.colCount) / 300)
+      override val maxBotCountPerCommander =
+        5 + ((tilemap.rowCount * tilemap.colCount) / 400)
     }
     Simulation(commanders, scenario)
   }

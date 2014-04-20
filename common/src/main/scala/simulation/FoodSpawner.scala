@@ -8,8 +8,8 @@ import util.Random
 import se.ramn.bottfarmen.simulation.entity.Position
 
 
-class FoodSpawner {
-  val foodMaxCount = 4
+class FoodSpawner(scenario: Scenario) {
+  lazy val foodMaxCount = scenario.maxFoodTilesCount
   val spawnIntervalTurns = 40
 
   private var mySpawnedFood = Set.empty[Position]
