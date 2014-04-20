@@ -156,7 +156,10 @@ class SimulationImpl(
     }.toMap
 
   def gameStateFor(commander: BotCommander): api.GameState =
-    gameStateApiGateway.forCommander(commander, turnNo)
+    gameStateApiGateway.forCommander(
+      commander,
+      turnNo,
+      foodSpawner.spawnedFood)
 
   def validateMove(
     commander: BotCommander

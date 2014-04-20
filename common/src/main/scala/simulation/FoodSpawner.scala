@@ -14,6 +14,8 @@ class FoodSpawner {
 
   private var mySpawnedFood = Set.empty[Position]
 
+  def spawnedFood: Set[Position] = mySpawnedFood
+
   def positionHasFood(position: Position): Boolean = mySpawnedFood(position)
 
   def consumeFood(position: Position): Unit = {

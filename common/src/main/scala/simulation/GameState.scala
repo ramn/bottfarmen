@@ -4,13 +4,18 @@ import collection.JavaConverters._
 
 import se.ramn.bottfarmen.api
 import se.ramn.bottfarmen.simulation.entity.BotCommander
+import se.ramn.bottfarmen.simulation.entity.Position
 
 
 class GameStateApiGateway(
   commanders: Set[BotCommander],
   scenario: Scenario
 ) {
-  def forCommander(commander: BotCommander, turnNo: Int): api.GameState = {
+  def forCommander(
+    commander: BotCommander,
+    turnNo: Int,
+    spawnedFood: Set[Position]
+  ): api.GameState = {
     val immutableBots: Seq[api.Bot] = commander.bots.toList.map { bot =>
       val otherCommanders = commanders.filterNot(_ == commander)
       val visibleTiles = Geography.positionsWithinRange(bot.position, range=8)
@@ -25,12 +30,20 @@ class GameStateApiGateway(
         val col = bot.col
         val hitpoints = bot.hitpoints
       }
+      val visibleFood: Set[api.Food] =
+        spawnedFood.filter(visibleTiles).map{ pos =>
+          new api.Food {
+            val row = pos.row
+            val col = pos.col
+          }
+        }
       new api.Bot {
         val id = bot.id
         val row = bot.row
         val col = bot.col
         val hitpoints = bot.hitpoints
         val enemiesInSight = visibleEnemyBots.toList.asJava
+        override val foodInSight = visibleFood.asJava
       }
     }
     new api.GameState {

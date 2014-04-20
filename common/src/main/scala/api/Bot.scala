@@ -7,4 +7,5 @@ trait Bot {
   def col: Int
   def hitpoints: Int
   def enemiesInSight: java.util.List[EnemyBot]
+  def foodInSight: java.util.Set[Food]
 }
