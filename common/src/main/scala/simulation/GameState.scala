@@ -13,7 +13,7 @@ class GameStateApiGateway(
   def forCommander(commander: BotCommander, turnNo: Int): api.GameState = {
     val immutableBots: Seq[api.Bot] = commander.bots.toList.map { bot =>
       val otherCommanders = commanders.filterNot(_ == commander)
-      val visibleTiles = Geography.positionsWithinRange(bot.position, range=5)
+      val visibleTiles = Geography.positionsWithinRange(bot.position, range=8)
       val visibleEnemyBots = for {
         commander <- otherCommanders
         bot <- commander.bots
