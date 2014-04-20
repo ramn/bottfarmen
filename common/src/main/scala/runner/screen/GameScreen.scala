@@ -146,6 +146,10 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
       (cell, colIx) <- row.zipWithIndex
       (x, y) = tileCoord(row=rowIx, col=colIx)
     } game.batch.draw(terrainSprites(cell), x, y)
+    for {
+      pos <- simulation.spawnedFood
+      (x, y) = tileCoord(row=pos.row, col=pos.col)
+    } game.batch.draw(terrainSprites('f'), x, y)
   }
 
   private def drawBots() = {
@@ -240,9 +244,11 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     val water    = selectTexture(row=0, col=1)
     val baseBot1 = selectTexture(row=0, col=2)
     val baseBot2 = selectTexture(row=0, col=3)
+    val food     = selectTexture(row=0, col=4)
     Map(
       '.' -> walkable,
       '~' -> water,
+      'f' -> food,
       '0' -> baseBot1,
       '1' -> baseBot2
     ).withDefaultValue(walkable)

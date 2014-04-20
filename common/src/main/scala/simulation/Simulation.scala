@@ -18,6 +18,7 @@ trait Simulation {
   def turnNo: Int
   def isGameOver: Boolean
   def victor: Option[BotCommander]
+  def spawnedFood: Set[Position]
 }
 
 

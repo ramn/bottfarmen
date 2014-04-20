@@ -35,6 +35,8 @@ class SimulationImpl(
 
   override def bots = view.bots
 
+  override def spawnedFood = foodSpawner.spawnedFood
+
   override def doTurn: Unit = {
     if (!isGameOver) {
       turnNo += 1
