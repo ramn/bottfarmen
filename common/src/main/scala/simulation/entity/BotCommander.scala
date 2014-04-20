@@ -12,6 +12,7 @@ trait BotCommander {
   var bots: Set[Bot]
   def requestCommands(gameState: api.GameState): Seq[api.Command]
   var homeBase: Base
+  def spawnBot(atPosition: Position): Unit
 }
 
 
@@ -30,6 +31,7 @@ class BotCommanderImpl(
   val playerCommander: api.BotCommander,
   var homeBase: Base
 ) extends BotCommander {
+  val botIdsIter = Iterator.from(1)
   override val name = playerCommander.name
   override var bots = Set.empty[Bot]
   override def requestCommands(gameState: api.GameState) = {
@@ -37,5 +39,13 @@ class BotCommanderImpl(
   }
   override def toString: String = {
     s"BotCommander($id, $name)"
+  }
+  override def spawnBot(atPosition: Position) = {
+    val bot = new Bot(botIdsIter.next, this) {
+      var row = atPosition.row
+      var col = atPosition.col
+      var hitpoints = 100
+    }
+    bots += bot
   }
 }

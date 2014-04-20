@@ -12,6 +12,7 @@ trait TileMap {
   val rows: IndexedSeq[IndexedSeq[Tile]]
   def startingPositions: Seq[StartingPosition]
   def isWithinMap(position: Position): Boolean
+  def isWalkable(position: Position): Boolean
   def tile(position: Position): Option[Tile]
 }
 
@@ -85,6 +86,10 @@ object TileMap {
         } else {
           None
         }
+      }
+      override def isWalkable(position: Position): Boolean = {
+        val nonWalkable = Set('~')
+        tile(position).filterNot(nonWalkable).isDefined
       }
     }
   }

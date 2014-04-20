@@ -6,6 +6,7 @@ import se.ramn.bottfarmen.api
 import se.ramn.bottfarmen.simulation.entity.Bot
 import se.ramn.bottfarmen.simulation.entity.Base
 import se.ramn.bottfarmen.simulation.entity.BotCommander
+import se.ramn.bottfarmen.simulation.entity.Position
 import se.ramn.bottfarmen.simulation.view.BotCommanderView
 import se.ramn.bottfarmen.simulation.view.BotView
 
@@ -43,12 +44,7 @@ object Simulation {
         id=commanderId(playerCommander),
         homeBase=new Base(hitpoints=800, row=pos.row, col=pos.col)
       )
-      val bot = new Bot(1, commander) {
-        var row = pos.row
-        var col = pos.col
-        var hitpoints = 100
-      }
-      commander.bots = Set(bot)
+      commander.spawnBot(Position(row=pos.row, col=pos.col))
       commander
     }
   }

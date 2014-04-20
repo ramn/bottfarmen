@@ -25,6 +25,7 @@ class SimulationTest extends FunSuite with OneInstancePerTest {
     var bots = Set.empty[Bot]
     def requestCommands(gameState: api.GameState) = ???
     var homeBase: Base = new Base(800, 99, 99)
+    def spawnBot(atPosition: Position) = ???
   }
 
   val bot1 = new Bot(1, commander1) {

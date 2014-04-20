@@ -4,6 +4,7 @@ import collection.JavaConverters._
 import collection.immutable.Iterable
 import collection.immutable.Seq
 import collection.immutable.IndexedSeq
+import util.Random
 
 import se.ramn.bottfarmen.api
 import se.ramn.bottfarmen.simulation.entity.Bot
@@ -22,6 +23,7 @@ class SimulationImpl(
 ) extends Simulation {
   lazy val view = new SimulationView(commanders)
   lazy val gameStateApiGateway = new GameStateApiGateway(commanders, scenario)
+  val foodSpawner = new FoodSpawner
 
   var turnNo = 0
   var isGameOver = false
@@ -35,12 +37,30 @@ class SimulationImpl(
     if (!isGameOver) {
       turnNo += 1
 
+      botsGrabFood()
+      foodSpawner.update(scenario.tilemap, turnNo)
+
       val actionsForTurn = actions(extractCommands())
       resolveAttackActions(actionsForTurn)
       resolveMoveActions(actionsForTurn)
       checkForVictory()
     } else {
       println("Game is already over, no more turn will be processed")
+    }
+  }
+
+  def botsGrabFood() = {
+    def allLivingBots = commanders.flatMap(_.bots).filter(_.isAlive)
+    val botsStandingOnFood =
+      allLivingBots.filter { bot => foodSpawner.positionHasFood(bot.position) }
+    botsStandingOnFood foreach { foodGrabbingBot =>
+      val commander = foodGrabbingBot.commander
+      val homeBasePos = commander.homeBase.position
+      val homeBaseOccupied = allLivingBots.exists(_.position == homeBasePos)
+      if (!homeBaseOccupied) {
+        foodSpawner.consumeFood(foodGrabbingBot.position)
+        commander.spawnBot(homeBasePos)
+      }
     }
   }
 

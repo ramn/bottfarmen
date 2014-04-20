@@ -26,6 +26,7 @@ class MoveResolverTest extends FunSuite with OneInstancePerTest {
       var bots = Set.empty[Bot]
       def requestCommands(gameState: api.GameState) = ???
       var homeBase: Base = new Base(800, 10 * myId, 10 * myId)
+      def spawnBot(atPosition: Position) = ???
     }
   }
 
