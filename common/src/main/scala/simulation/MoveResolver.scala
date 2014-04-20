@@ -46,7 +46,7 @@ class MoveResolver(movers: Map[Bot, Position], still: Set[Bot], scenario: Scenar
 
     val resolveWater = partiallyResolve { (moversLeft, targetPos, bots) =>
       val targetTile = tile(targetPos).get
-      if (targetTile == '~') {
+      if (targetTile == Tiles.Water) {
         bots foreach { bot =>
           bot.takeDamage(bot.hitpoints)
         }

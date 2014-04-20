@@ -27,6 +27,7 @@ import se.ramn.bottfarmen.simulation.TileMap
 import se.ramn.bottfarmen.simulation.BotCommanderLoader
 import se.ramn.bottfarmen.simulation.Simulation
 import se.ramn.bottfarmen.simulation.Scenario
+import se.ramn.bottfarmen.simulation.Tiles
 import se.ramn.bottfarmen.simulation.view.BotCommanderView
 import se.ramn.bottfarmen.util.Times
 
@@ -151,7 +152,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     for {
       pos <- simulation.spawnedFood
       (x, y) = tileCoord(row=pos.row, col=pos.col)
-    } game.batch.draw(terrainSprites('f'), x, y)
+    } game.batch.draw(terrainSprites(Tiles.Food), x, y)
   }
 
   private def drawBots() = {
@@ -244,15 +245,15 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
     }
     val walkable = selectTexture(row=0, col=0)
     val water    = selectTexture(row=0, col=1)
-    val baseBot1 = selectTexture(row=0, col=2)
-    val baseBot2 = selectTexture(row=0, col=3)
+    val baseBot0 = selectTexture(row=0, col=2)
+    val baseBot1 = selectTexture(row=0, col=3)
     val food     = selectTexture(row=0, col=4)
     Map(
-      '.' -> walkable,
-      '~' -> water,
-      'f' -> food,
-      '0' -> baseBot1,
-      '1' -> baseBot2
+      Tiles.Land -> walkable,
+      Tiles.Water -> water,
+      Tiles.Food -> food,
+      Tiles.HomeCommander0 -> baseBot0,
+      Tiles.HomeCommander1 -> baseBot1
     ).withDefaultValue(walkable)
   }
 
