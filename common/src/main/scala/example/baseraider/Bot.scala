@@ -31,12 +31,14 @@ class Bot(var underlying: api.Bot) extends BaseBot with Logging {
       }
     }
 
-    commandOptFromTaskStack orElse {
-      if (position == terrain.enemyBasePos)
-        Some(api.Attack(id, row=row, col=col))
-      else
-        pickRandomMove(terrain)
-    }
+    commandOptFromTaskStack orElse defaultCommandOpt(terrain)
+  }
+
+  def defaultCommandOpt(terrain: Terrain): Option[Command] = {
+    if (position == terrain.enemyBasePos)
+      Some(api.Attack(id, row=row, col=col))
+    else
+      pickRandomMove(terrain)
   }
 
   def commandOptFromTaskStack: Option[Command] = taskStack match {
