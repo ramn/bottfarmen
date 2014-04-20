@@ -23,7 +23,7 @@ class Bot(var underlying: api.Bot) extends BaseBot with Logging {
   def position = Position(row=row, col=col)
 
   def selectCommand(gameState: GameState): Option[Command] = {
-    lazy val terrain = new Terrain(gameState)
+    val terrain = new Terrain(gameState)
     issueTasks(gameState, terrain)
     commandOptFromTaskStack orElse defaultCommandOpt(terrain)
   }

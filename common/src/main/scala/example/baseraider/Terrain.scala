@@ -36,7 +36,7 @@ class Terrain(gameState: GameState) extends Logging {
     tile(position).filterNot(nonWalkable).isDefined
   }
 
-  val allPositions: Set[Position] = for {
+  lazy val allPositions: Set[Position] = for {
     rowIx <- (0 until rowCount).toSet[Int]
     colIx <- 0 until colCount
   } yield Position(row=rowIx, col=colIx)
