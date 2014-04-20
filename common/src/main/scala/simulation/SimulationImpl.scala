@@ -44,18 +44,6 @@ class SimulationImpl(
     }
   }
 
-  def checkForVictory() = {
-    val withBaseStillStanding = commanders.filter(_.homeBase.isAlive)
-    val hasLastManStanding = withBaseStillStanding.size == 1
-    val allBasesAreRazed = withBaseStillStanding.size == 0
-    if (hasLastManStanding || allBasesAreRazed) {
-      isGameOver = true
-      if (hasLastManStanding) {
-        victor = withBaseStillStanding.headOption
-      }
-    }
-  }
-
   def resolveAttackActions(actions: Seq[Action]) = {
     actions foreach {
       case Attack(attacker, targetPos) =>
@@ -98,6 +86,18 @@ class SimulationImpl(
     unhandledMovers foreach { unhandledMover =>
       val (bot, pos) = unhandledMover
       println(s"Could not move bot $bot to $pos")
+    }
+  }
+
+  def checkForVictory() = {
+    val withBaseStillStanding = commanders.filter(_.homeBase.isAlive)
+    val hasLastManStanding = withBaseStillStanding.size == 1
+    val allBasesAreRazed = withBaseStillStanding.size == 0
+    if (hasLastManStanding || allBasesAreRazed) {
+      isGameOver = true
+      if (hasLastManStanding) {
+        victor = withBaseStillStanding.headOption
+      }
     }
   }
 
