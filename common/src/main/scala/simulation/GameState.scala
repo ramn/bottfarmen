@@ -42,7 +42,7 @@ class GameStateApiGateway(
         val row = bot.row
         val col = bot.col
         val hitpoints = bot.hitpoints
-        val enemiesInSight = visibleEnemyBots.toList.asJava
+        val enemiesInSight = visibleEnemyBots.asJava
         override val foodInSight = visibleFood.asJava
       }
     }

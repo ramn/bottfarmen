@@ -6,6 +6,6 @@ trait Bot {
   def row: Int
   def col: Int
   def hitpoints: Int
-  def enemiesInSight: java.util.List[EnemyBot]
+  def enemiesInSight: java.util.Set[EnemyBot]
   def foodInSight: java.util.Set[Food]
 }

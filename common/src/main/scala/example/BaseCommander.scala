@@ -18,7 +18,7 @@ trait BaseBot {
   def row: Int = underlying.row
   def col: Int = underlying.col
   def hitpoints: Int = underlying.hitpoints
-  def enemiesInSight: Seq[EnemyBot] = underlying.enemiesInSight.asScala.toList
+  def enemiesInSight: Set[EnemyBot] = underlying.enemiesInSight.asScala.toSet
 }
 
 
