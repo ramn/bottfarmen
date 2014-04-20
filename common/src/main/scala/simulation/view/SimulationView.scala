@@ -4,7 +4,13 @@ import se.ramn.bottfarmen.simulation.entity.Bot
 import se.ramn.bottfarmen.simulation.entity.BotCommander
 
 
-class SimulationView(commanders: Set[BotCommander]) {
+trait SimulationView {
+  def botCommanders: Set[BotCommanderView]
+  def bots: Set[BotView]
+}
+
+
+class SimulationViewImpl(commanders: Set[BotCommander]) extends SimulationView {
 
   def botCommanders = commanders map commanderView
 

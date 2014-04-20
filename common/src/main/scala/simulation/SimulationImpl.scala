@@ -15,13 +15,15 @@ import se.ramn.bottfarmen.simulation.entity.Action
 import se.ramn.bottfarmen.simulation.entity.Move
 import se.ramn.bottfarmen.simulation.entity.Attack
 import se.ramn.bottfarmen.simulation.view.SimulationView
+import se.ramn.bottfarmen.simulation.view.SimulationViewImpl
+import se.ramn.bottfarmen.util.Logging
 
 
 class SimulationImpl(
   val commanders: Set[BotCommander],
   scenario: Scenario
-) extends Simulation {
-  lazy val view = new SimulationView(commanders)
+) extends Simulation with Logging {
+  lazy val view: SimulationView = new SimulationViewImpl(commanders)
   lazy val gameStateApiGateway = new GameStateApiGateway(commanders, scenario)
   val foodSpawner = new FoodSpawner(scenario)
 
