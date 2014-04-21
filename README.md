@@ -46,4 +46,4 @@ Run standalone jar
     #export LOG_LEVEL=Debug # optional
     #export MAP_FILE="/assets/data/some_map.txt" # optional
     export COMMANDERS="se.ramn.bottfarmen.example.baseraider.BaseRaiderCommander,se.ramn.bottfarmen.example.idle.IdleCommander"
-    java -jar desktop/target/scala-2.10/desktop-assembly-0.1.jar
+    java -jar desktop/target/scala-2.10/bottfarmen-desktop-assembly-0.1.jar
