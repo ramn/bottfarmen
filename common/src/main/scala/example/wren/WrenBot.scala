@@ -53,7 +53,7 @@ class WrenBot(var underlying: api.Bot) extends BaseBot {
 }
 
 class WrenCommander extends BaseCommander[WrenBot] {
-  val name = "RandomCommander"
+  val name = "WrenCommander"
 
   override def makeBot(serverSideBot: api.Bot) = new WrenBot(serverSideBot)
 
