@@ -34,17 +34,17 @@ class FoodSpawner(scenario: Scenario) {
   }
 
   protected def buildPositionIterator(tilemap: TileMap) = {
-      def makeRandomPos =
-        Position(
-          row=Random.nextInt(tilemap.rowCount),
-          col=Random.nextInt(tilemap.colCount))
-      val posIter = Iterator.continually(makeRandomPos)
-      def isLand(position: Position) = {
-        // Excludes starting positions
-        tilemap.tile(position).exists(_ == Tiles.Land)
-      }
-      posIter
-        .filter(isLand)
-        .filterNot(mySpawnedFood)
+    def makeRandomPos =
+      Position(
+        row=Random.nextInt(tilemap.rowCount),
+        col=Random.nextInt(tilemap.colCount))
+    val posIter = Iterator.continually(makeRandomPos)
+    def isLand(position: Position) = {
+      // Excludes starting positions
+      tilemap.tile(position).exists(_ == Tiles.Land)
+    }
+    posIter
+      .filter(isLand)
+      .filterNot(mySpawnedFood)
   }
 }
