@@ -47,8 +47,8 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   private lazy val map = TileMap.fromEnvOrDefault(
     defaultMapPath="/assets/data/testmap.txt")
   private object propertiesHud {
-    val leftOffset = 1050
-    val leftBorderOffset = leftOffset - 50
+    val leftOffset = tilesize * 64 + tilesize * 2
+    val leftBorderOffset = leftOffset - (tilesize * 2)
     val propertiesOffset = game.height - 30
     val lineHeight = 18
     def hudLineOffsetsIter = Iterator.iterate(propertiesOffset) { x =>
@@ -179,9 +179,10 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
 
     shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
     shapeRenderer.setColor(Color.WHITE)
+    val lineLeftOffset = leftBorderOffset + 1
     shapeRenderer.line(
-      leftBorderOffset, game.height,
-      leftBorderOffset, 0)
+      lineLeftOffset, game.height,
+      lineLeftOffset, 0)
     shapeRenderer.end()
   }
 
