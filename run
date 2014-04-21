@@ -2,10 +2,10 @@
 
 
 # Config
-#export MAP_FILE="/assets/data/testmap.txt"
-#export COMMANDERS="se.ramn.bottfarmen.example.baseraider.BaseRaiderCommander,se.ramn.bottfarmen.example.idle.IdleCommander"
 #export LOG_LEVEL=Debug
+#export MAP_FILE="/assets/data/testmap.txt"
 #export EXTRA_CLASSPATH="path/to/some.jar:path/to/another.jar"
+#export COMMANDERS="se.ramn.bottfarmen.example.baseraider.BaseRaiderCommander,se.ramn.bottfarmen.example.idle.IdleCommander"
 
 
 function run_with_sbt() {
