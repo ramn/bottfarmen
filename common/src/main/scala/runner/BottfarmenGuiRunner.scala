@@ -38,10 +38,10 @@ class BottfarmenGuiRunner(val width: Int, val height: Int) extends Game {
       fontConfig.size = size
       fontConfig
     }
-    val fontFile = Gdx.files.internal("assets/font/Minecraftia.ttf")
+    val fontFile = Gdx.files.internal("assets/font/Courier_Prime.ttf")
     val generator = new FreeTypeFontGenerator(fontFile)
-    val fontSmall: BitmapFont = generator.generateFont(fontConf(size=14))
-    val fontLarge: BitmapFont = generator.generateFont(fontConf(size=22))
+    val fontSmall: BitmapFont = generator.generateFont(fontConf(size=16))
+    //val fontLarge: BitmapFont = generator.generateFont(fontConf(size=22))
     generator.dispose()
     fontSmall
   }
