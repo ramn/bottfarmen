@@ -2,13 +2,13 @@
 
 
 # Config
-#export MAP_FILE="assets/data/testmap.txt"
+#export MAP_FILE="/assets/data/testmap.txt"
 #export COMMANDERS="se.ramn.bottfarmen.example.baseraider.BaseRaiderCommander,se.ramn.bottfarmen.example.idle.IdleCommander"
 #export LOG_LEVEL=Debug
 
 
 function run_with_sbt() {
-  exec sbt "project desktop" "run"
+  exec sbt "project bottfarmen-desktop" "run"
 }
 
 function build_and_run_jar() {
