@@ -32,7 +32,7 @@ class Bot(var underlying: api.Bot) extends BaseBot with Logging {
   def selectCommand(gameState: GameState): Option[Command] = {
     val terrain = new Terrain(gameState)
     if (!foodPositions.isEmpty) {
-      logger.info(s"I see food at: ${foodPositions.mkString(", ")}")
+      logger.debug(s"I see food at: ${foodPositions.mkString(", ")}")
     }
     issueTasks(gameState, terrain)
     commandOptFromTaskStack orElse defaultCommandOpt(terrain)
