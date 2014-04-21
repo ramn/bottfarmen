@@ -15,17 +15,40 @@ import se.ramn.bottfarmen.example.BaseCommander
 class WrenBot(var underlying: api.Bot) extends BaseBot {
   case class Pos(x: Int, y: Int)
 
-  def isAlive = underlying.hitpoints > 0
-  val directions = "nwse".toSeq
-  def nextRandomDir = directions(util.Random.nextInt(directions.length))
-  def update(gameState: GameState) = {
-    val direction = 'e'
-    val proposedPos = Pos(col+1, row)
-    val targetTerrain = gameState.terrain.split("\n")(proposedPos.y)(proposedPos.x)
-    if (targetTerrain == '.')
-      Move(id, direction)
+  var gameState: GameState = null
+  var myPos: Pos = null
+
+  def enemyInRange: Boolean = {
+    println(enemiesInSight)
+    true
+  }
+
+  def possibleMoves = Map(
+    (Pos(myPos.x+1, myPos.y), 'e'),
+    (Pos(myPos.x-1, myPos.y), 'w'),
+    (Pos(myPos.x, myPos.y-1), 'n'),
+    (Pos(myPos.x, myPos.y+1), 's')
+  )
+
+  def moveIsValid(newPos: Pos) = {
+    if(gameState.terrain.split("\n")(newPos.y)(newPos.x) != '~')
+      true
     else
-      Move(id, 'n')
+      false
+  }
+
+  def validMoves = possibleMoves.filter(p => moveIsValid(p._1)).map(_._2)
+
+  def isAlive = underlying.hitpoints > 0
+
+  def nextRandomDir = validMoves.toSeq(util.Random.nextInt(validMoves.toSeq.length))
+
+  def update(gameState: GameState) = {
+    myPos = Pos(col, row)
+    this.gameState = gameState
+    enemyInRange
+    println(validMoves.toString())
+    Move(id, nextRandomDir)
   }
 }
 
