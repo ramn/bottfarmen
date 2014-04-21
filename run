@@ -5,6 +5,7 @@
 #export MAP_FILE="/assets/data/testmap.txt"
 #export COMMANDERS="se.ramn.bottfarmen.example.baseraider.BaseRaiderCommander,se.ramn.bottfarmen.example.idle.IdleCommander"
 #export LOG_LEVEL=Debug
+#export EXTRA_CLASSPATH="path/to/some.jar:path/to/another.jar"
 
 
 function run_with_sbt() {
@@ -13,7 +14,8 @@ function run_with_sbt() {
 
 function build_and_run_jar() {
   sbt assembly
-  exec java -jar desktop/target/scala-2.10/bottfarmen-desktop-assembly-0.1.jar
+  DESKTOP_STARTER_JAR="desktop/target/scala-2.10/bottfarmen-desktop-assembly-0.1.jar"
+  exec java -cp "$DESKTOP_STARTER_JAR:$EXTRA_CLASSPATH" se.ramn.bottfarmen.DesktopStarter
 }
 
 build_and_run_jar
