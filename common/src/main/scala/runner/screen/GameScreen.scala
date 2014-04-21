@@ -49,7 +49,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
   private object propertiesHud {
     val leftOffset = 1050
     val leftBorderOffset = leftOffset - 50
-    val propertiesOffset = game.height - 40
+    val propertiesOffset = game.height - 30
     val lineHeight = 18
     def hudLineOffsetsIter = Iterator.iterate(propertiesOffset) { x =>
       x - lineHeight
@@ -197,6 +197,9 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
       game.batch.draw(botSprite(commander.id), x, y)
     }
     game.batch.setColor(Color.WHITE)
+    drawtextln(s"Turn no: ${simulation.turnNo}")
+    offsets.next
+    offsets.next
     simulation.botCommanders foreach { commander =>
       drawSprite(commander)
       drawtextln(commander.name)
