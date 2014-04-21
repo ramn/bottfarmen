@@ -39,7 +39,7 @@ class Bot(var underlying: api.Bot) extends BaseBot with Logging {
   }
 
   def issueTasks(gameState: GameState, terrain: Terrain): Unit = {
-    if (gameState.turn == 1) {
+    if (taskStack.isEmpty) {
       val pathToEnemyBase = findPathToEnemyBase(terrain)
       if (!pathToEnemyBase.isEmpty) {
         taskStack +:= FollowPath(pathToEnemyBase, position)
