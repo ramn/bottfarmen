@@ -27,14 +27,13 @@ class FoodSpawner(scenario: Scenario) {
     val foodsToSpawn =
       (foodMaxCount - mySpawnedFood.size) % (foodMaxCount + 1)
     if (shouldSpawn && foodsToSpawn > 0) {
-      val positionIterator = buildPositionIterator(tilemap, turnNo)
+      val positionIterator = buildPositionIterator(tilemap)
       val selectedFoodPositions = positionIterator.take(foodsToSpawn)
       mySpawnedFood ++= selectedFoodPositions
     }
   }
 
-  protected def buildPositionIterator(
-    tilemap: TileMap, turnNo: Int) = {
+  protected def buildPositionIterator(tilemap: TileMap) = {
       def makeRandomPos =
         Position(
           row=Random.nextInt(tilemap.rowCount),
