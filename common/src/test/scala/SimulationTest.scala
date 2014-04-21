@@ -1,5 +1,6 @@
 import org.scalatest.FunSuite
 import org.scalatest.OneInstancePerTest
+import org.scalamock.scalatest.MockFactory
 
 import collection.immutable.Seq
 
@@ -16,8 +17,8 @@ import se.ramn.bottfarmen.simulation.TileMap
 import se.ramn.bottfarmen.simulation.Scenario
 
 
-class SimulationTest extends FunSuite with OneInstancePerTest {
-  val target = new SimulationImpl(null, null)
+class SimulationTest extends FunSuite with OneInstancePerTest with MockFactory {
+  val target = new SimulationImpl(null, mock[Scenario])
 
   val commander1 = new BotCommander {
     val id = 1

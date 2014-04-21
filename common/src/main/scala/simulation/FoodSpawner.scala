@@ -11,8 +11,10 @@ import se.ramn.bottfarmen.simulation.entity.Position
 class FoodSpawner(scenario: Scenario) {
   lazy val foodMaxCount = scenario.maxFoodTilesCount
   val spawnIntervalTurns = 40
+  val foodsToSpawnPerOccasion = 2
 
   private var mySpawnedFood = Set.empty[Position]
+  spawnFoods(scenario.tilemap, foodMaxCount)
 
   def spawnedFood: Set[Position] = mySpawnedFood
 
@@ -24,13 +26,24 @@ class FoodSpawner(scenario: Scenario) {
 
   def update(tilemap: TileMap, turnNo: Int) {
     val shouldSpawn = turnNo % spawnIntervalTurns == 1
-    val foodsToSpawn =
+    val freeFoodSpots =
       (foodMaxCount - mySpawnedFood.size) % (foodMaxCount + 1)
+    val foodsToSpawn =
+      if (freeFoodSpots >= foodsToSpawnPerOccasion)
+        foodsToSpawnPerOccasion
+      else if (freeFoodSpots > 0)
+        freeFoodSpots
+      else
+        0
     if (shouldSpawn && foodsToSpawn > 0) {
-      val positionIterator = buildPositionIterator(tilemap)
-      val selectedFoodPositions = positionIterator.take(foodsToSpawn)
-      mySpawnedFood ++= selectedFoodPositions
+      spawnFoods(tilemap, foodsToSpawn)
     }
+  }
+
+  protected def spawnFoods(tilemap: TileMap, foodsToSpawn: Int) = {
+    val positionIterator = buildPositionIterator(tilemap)
+    val selectedFoodPositions = positionIterator.take(foodsToSpawn)
+    mySpawnedFood ++= selectedFoodPositions
   }
 
   protected def buildPositionIterator(tilemap: TileMap) = {

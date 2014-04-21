@@ -17,7 +17,8 @@ object Settings {
     ),
     javacOptions ++= Seq("-Xlint:unchecked"),
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "2.1.3"
+      "org.scalatest" %% "scalatest" % "2.1.3" % "test",
+      "org.scalamock" %% "scalamock-scalatest-support" % "3.1.RC1" % "test"
     )
   )
 
