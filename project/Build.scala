@@ -96,13 +96,13 @@ object Settings {
 
 object LibgdxBuild extends Build {
   val common = Project(
-    "common",
+    "bottfarmen-common",
     file("common"),
     settings = Settings.common :+ Settings.updateGdxSetting
   )
 
   lazy val desktop = Project (
-    "desktop",
+    "bottfarmen-desktop",
     file("desktop"),
     settings = Settings.desktop
   ) dependsOn common
