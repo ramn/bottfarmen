@@ -8,13 +8,6 @@ object Geography extends Manhattan
 
 class Manhattan {
   def positionsWithinRange(startPosition: Position, range: Int): Set[Position] = {
-    def neighbours(pos: Position): Set[Position] =
-      Set(
-        pos.copy(row=pos.row - 1),
-        pos.copy(row=pos.row + 1),
-        pos.copy(col=pos.col - 1),
-        pos.copy(col=pos.col + 1))
-
     var open = Queue(startPosition)
     var closed = Set.empty[Position]
     var distances = Map((startPosition) -> 0)
@@ -25,7 +18,7 @@ class Manhattan {
       val neighbourDistance = currentDistance + 1
       closed = closed + tile
       if (neighbourDistance <= range) {
-        val currentNeighbours = neighbours(tile).filterNot(closed)
+        val currentNeighbours = tile.neighbours.filterNot(closed)
         open = nextQueue.enqueue(currentNeighbours)
         val neighboursWithDistances =
           currentNeighbours.zip(Stream.continually(currentDistance + 1))
