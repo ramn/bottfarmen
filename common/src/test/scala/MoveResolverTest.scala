@@ -16,6 +16,7 @@ class MoveResolverTest extends FunSuite with OneInstancePerTest {
     override val tilemap = TileMap.loadFromClassPath("/testmap.txt")
     override val maxFoodTilesCount = 15
     override val maxBotCountPerCommander = 12
+    override val botVisibilityRange = -1
   }
   val commander1 = createCommander(1)
   val commander2 = createCommander(2)

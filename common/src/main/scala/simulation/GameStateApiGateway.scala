@@ -18,7 +18,9 @@ class GameStateApiGateway(
   ): api.GameState = {
     val immutableBots: Seq[api.Bot] = commander.bots.toList.map { bot =>
       val otherCommanders = commanders.filterNot(_ == commander)
-      val visibleTiles = Geography.positionsWithinRange(bot.position, range=8)
+      val visibleTiles = Geography.positionsWithinRange(
+        bot.position,
+        range=scenario.botVisibilityRange)
       val visibleEnemyBots = for {
         commander <- otherCommanders
         bot <- commander.bots
@@ -53,6 +55,7 @@ class GameStateApiGateway(
       val rowCount = scenario.tilemap.rowCount
       val colCount = scenario.tilemap.colCount
       val homeBase = apiBaseFrom(commander)
+      val botVisibilityRange = scenario.botVisibilityRange
     }
   }
 

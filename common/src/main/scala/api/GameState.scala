@@ -8,4 +8,5 @@ trait GameState {
   def rowCount: Int
   def colCount: Int
   def homeBase: Base
+  def botVisibilityRange: Int
 }

@@ -229,6 +229,7 @@ class GameScreen(val game: BottfarmenGuiRunner) extends ScreenWithVoidImpl {
         5 + ((tilemap.rowCount * tilemap.colCount) / 300)
       override val maxBotCountPerCommander =
         5 + ((tilemap.rowCount * tilemap.colCount) / 400)
+      override val botVisibilityRange = 8
     }
     Simulation(commanders, scenario)
   }
