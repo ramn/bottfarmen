@@ -14,7 +14,7 @@ function run_with_sbt() {
 
 function build_and_run_jar() {
   sbt assembly
-  DESKTOP_STARTER_JAR="desktop/target/scala-2.10/bottfarmen-desktop-assembly-0.1.jar"
+  DESKTOP_STARTER_JAR="desktop/target/scala-2.10/bottfarmen-desktop-assembly-0.1-SNAPSHOT.jar"
   exec java -cp "$DESKTOP_STARTER_JAR:$EXTRA_CLASSPATH" se.ramn.bottfarmen.DesktopStarter
 }
 

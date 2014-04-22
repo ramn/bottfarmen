@@ -46,7 +46,7 @@ Run standalone jar
     #export LOG_LEVEL=Debug # optional
     #export MAP_FILE="/assets/data/testmap.txt" # opional
     export COMMANDERS="se.ramn.bottfarmen.example.baseraider.BaseRaiderCommander,se.ramn.bottfarmen.example.idle.IdleCommander"
-    java -cp desktop/target/scala-2.10/bottfarmen-desktop-assembly-0.1.jar se.ramn.bottfarmen.DesktopStarter
+    java -cp desktop/target/scala-2.10/bottfarmen-desktop-assembly-0.1-SNAPSHOT.jar se.ramn.bottfarmen.DesktopStarter
 
 
 Run your own bot
