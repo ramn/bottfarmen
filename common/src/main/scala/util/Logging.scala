@@ -2,7 +2,7 @@ package se.ramn.bottfarmen.util
 
 
 trait Logging {
-  lazy val logger: Logger = new SimpleLogger
+  lazy val logger: Logger = new SimpleLogger(this)
 }
 
 
@@ -20,7 +20,7 @@ object Level extends Enumeration {
 }
 
 
-class SimpleLogger extends Logger {
+class SimpleLogger(loggingEntity: Any) extends Logger {
   val logLevelFromEnvOpt =
     sys.env.get("LOG_LEVEL").map(_.capitalize).map(Level.withName)
   var logLevel: Level.LogLevel = logLevelFromEnvOpt.getOrElse(Level.Info)
@@ -32,11 +32,14 @@ class SimpleLogger extends Logger {
 
   def log(messageLevel: Level.LogLevel, message: => String): Unit = {
     if (logLevel <= messageLevel) {
-      write(message)
+      val loggingEntityName = loggingEntity.getClass.getName
+      val messageLevelStr = messageLevel.toString.toUpperCase
+      val messagePrefix = s"$messageLevelStr $loggingEntityName"
+      write(s"$messagePrefix $message")
     }
   }
 
-  def write(message: => String): Unit = {
+  def write(message: String): Unit = {
     val logOutputStream = System.err
     //val logOutputStream = System.out
     logOutputStream.println(message)
