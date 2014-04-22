@@ -117,15 +117,15 @@ class SimulationImpl(
   def checkForVictory() = {
     val withBaseStillStanding = commanders.filter(_.homeBase.isAlive)
     val withBotsAlive = commanders.filter(_.bots.filter(_.isAlive).size > 0)
-    val hasLastManStanding =
-      withBaseStillStanding.size == 1 || withBotsAlive.size == 1
     val allBasesAreRazed = withBaseStillStanding.size == 0
-    if (hasLastManStanding || allBasesAreRazed) {
+    val hasLastBaseStanding = withBaseStillStanding.size == 1
+    val hasLastBotStanding = withBotsAlive.size == 1
+    if (hasLastBaseStanding || allBasesAreRazed || hasLastBotStanding) {
       isGameOver = true
-      if (hasLastManStanding) {
-        victor =
-          withBaseStillStanding.headOption orElse
-          withBotsAlive.headOption
+      if (hasLastBaseStanding) {
+        victor = withBaseStillStanding.headOption
+      } else if (hasLastBotStanding) {
+        victor = withBotsAlive.headOption
       }
     }
   }
