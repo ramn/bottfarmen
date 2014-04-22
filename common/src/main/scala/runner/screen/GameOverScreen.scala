@@ -31,11 +31,11 @@ class GameOverScreen(val game: BottfarmenGuiRunner, simulation: Simulation) exte
     }
     drawtextln("Game Over!")
     textLineOffsets.next
-    if (simulation.victor.isDefined) {
-      drawtextln(s"Victor: ${simulation.victor.get}")
-    } else {
-      drawtextln("Everybody lost.")
-    }
+
+    val victorPresentation = simulation.victor.map { victor =>
+      s"Victor: ${victor.name} (id: ${victor.id})"
+    }.getOrElse("Everybody lost.")
+    drawtextln(victorPresentation)
     drawtextln("Click anywhere to quit")
     game.batch.end()
 
