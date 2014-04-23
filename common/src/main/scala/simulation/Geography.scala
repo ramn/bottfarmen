@@ -8,23 +8,21 @@ object Geography extends Manhattan
 
 class Manhattan {
   def positionsWithinRange(startPosition: Position, range: Int): Set[Position] = {
-    var open = Queue(startPosition)
-    var closed = Set.empty[Position]
-    var distances = Map((startPosition) -> 0)
-    while (!open.isEmpty) {
-      val (tile, nextQueue) = open.dequeue
-      open = nextQueue
-      val currentDistance = distances(tile)
-      val neighbourDistance = currentDistance + 1
-      closed = closed + tile
-      if (neighbourDistance <= range) {
-        val currentNeighbours = tile.neighbours.filterNot(closed)
-        open = nextQueue.enqueue(currentNeighbours)
-        val neighboursWithDistances =
-          currentNeighbours.zip(Stream.continually(currentDistance + 1))
-        distances = distances ++ neighboursWithDistances
-      }
-    }
-    distances.keySet
+    val s = startPosition
+    val halfRange = (range - 1) to 0 by -1
+
+    val aboveOrBelow = for {
+      radius <- halfRange
+      rowUp = (range - radius)
+      col <- (-radius to radius by 1)
+    } yield Set(
+      Position(row=s.row-rowUp, col=s.col+col),
+      Position(row=s.row+rowUp, col=s.col+col))
+
+    val same = for {
+      radius <- (-range to range)
+    } yield s.copy(col=s.col+radius)
+
+    aboveOrBelow.flatten.toSet ++ same.toSet
   }
 }

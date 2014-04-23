@@ -1,8 +1,7 @@
+import collection.immutable.Seq
 import org.scalatest.FunSuite
 import org.scalatest.OneInstancePerTest
 import org.scalamock.scalatest.MockFactory
-
-import collection.immutable.Seq
 
 import se.ramn.bottfarmen.simulation.entity.Position
 import se.ramn.bottfarmen.simulation.TileMap
@@ -13,7 +12,8 @@ import se.ramn.bottfarmen.simulation.Geography
 class GeographyTest extends FunSuite {
   test("positionsWithinRange") {
     val target = Geography
-    val result = target.positionsWithinRange(Position(3, 3), 2)
+    val range = 2
+    val result = target.positionsWithinRange(Position(row=3, col=3), range)
     val p = Position
     val expected = Set(
       p(row=1, col=3),
